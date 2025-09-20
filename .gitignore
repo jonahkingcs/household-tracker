@@ -1,0 +1,34 @@
+cat > .gitignore << 'EOF'
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE / Editor
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+.idea/
+
+# Local databases / state
+household.db
+*.sqlite
+*.sqlite3
+
+# Build output
+dist/
+build/
+*.app
+*.dmg
+EOF

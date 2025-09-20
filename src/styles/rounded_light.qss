@@ -1,0 +1,72 @@
+/*
+  Light rounded theme for Household Tracker.
+
+  Inspired by macOS/iOS modern light mode design:
+  - Bright neutral backgrounds (#f5f6f7 base, subtle darker panels)
+  - Rounded corners on tabs, cards, buttons, and inputs
+  - Subtle hover/pressed states for buttons
+  - Minimal scrollbar styling
+
+  Apply via: app.setStyleSheet(open("rounded_light.qss").read())
+*/
+
+/* Base */
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+QWidget {
+  background-color: #f5f6f7;
+  color: #1a1a1a;
+}
+
+/* Tabs */
+QTabBar::tab {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  padding: 8px 16px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-right: 4px;
+}
+QTabBar::tab:selected {
+  background: #f5dcf4;
+  border: 1px solid #107865
+}
+
+/* Cards (use on your chore/item widgets by setting objectName or class) */
+.QCard {
+  background: #ffffff;
+  border: 1px solid #0e9c82;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+/* Buttons */
+QPushButton {
+  background: #f0f0f0;
+  border: 1px solid #1c2624;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+QPushButton:hover { background: #e0e0e0; }
+QPushButton:pressed { background: #1c2624; }
+
+/* Inputs */
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  padding: 6px 8px;
+}
+
+/* Scrollbars (subtle) */
+QScrollBar:vertical {
+  background: transparent;
+  width: 10px;
+  margin: 2px;
+}
+QScrollBar::handle:vertical {
+  background: #c8c8c8;
+  border-radius: 6px;
+  min-height: 20px;
+}
