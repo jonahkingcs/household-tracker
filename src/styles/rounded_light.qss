@@ -12,10 +12,10 @@
 
 /* Base */
 * {
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Menlo, monospace;
 }
 QWidget {
-  background-color: #f5f6f7;
+  background-color: #ffffff;
   color: #1a1a1a;
 }
 
@@ -41,15 +41,46 @@ QTabBar::tab:selected {
   padding: 12px;
 }
 
-/* Buttons */
+/* Buttons — match tab look & feel */
 QPushButton {
-  background: #f0f0f0;
-  border: 1px solid #1c2624;
-  padding: 8px 14px;
+  background: #ffffff;                /* like normal tab */
+  border: 1px solid #d0d0d0;          /* like normal tab border */
   border-radius: 10px;
+  padding: 8px 20px;
+  color: #1a1a1a;
 }
-QPushButton:hover { background: #e0e0e0; }
-QPushButton:pressed { background: #1c2624; }
+
+QPushButton:hover {
+  background: #f5dcf4;                /* same as selected tab background */
+  border: 1px solid #107865;          /* accent border on hover */
+}
+
+QPushButton:pressed {
+  background: #107865;                /* solid accent when pressed */
+  color: #ffffff;                     /* readable text on dark */
+  border: 1px solid #107865;
+}
+
+QPushButton:default {
+  /* default action button gets a subtle accent ring */
+  border: 1px solid #107865;
+}
+
+QPushButton:disabled {
+  background: #f0f0f0;
+  color: #9a9a9a;
+  border: 1px solid #e0e0e0;
+}
+
+/* Ensure dialog buttons inherit the same style (redundant but explicit) */
+QDialogButtonBox QPushButton {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+QDialogButtonBox QPushButton:hover { background: #f5dcf4; border: 1px solid #107865; }
+QDialogButtonBox QPushButton:pressed { background: #107865; color: #ffffff; border: 1px solid #107865; }
 
 /* Inputs */
 QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
@@ -69,4 +100,53 @@ QScrollBar::handle:vertical {
   background: #c8c8c8;
   border-radius: 6px;
   min-height: 20px;
+}
+
+/* ------- Tables (QTableWidget / QTableView) ------- */
+QTableView {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  gridline-color: #e5e7eb;
+  selection-background-color: #E6F7F2;  /* green highlight */
+  selection-color: #1a1a1a;             /* black text */
+  alternate-background-color: #fafafa;
+}
+
+/* Cell padding for breathing room */
+QTableView::item {
+  padding: 8px 10px;
+}
+
+/* Column header */
+QHeaderView::section {
+  background-color: #107865;       /* your green */
+  color: #ffffff;
+  padding: 8px 10px;
+  border: none;
+  border-right: 1px solid #0d6b57; /* separator between header cells */
+  border-bottom: 1px solid #0d6b57;/* fixes the gap between header and first row */
+}
+
+/* Round the leftmost header cell */
+QHeaderView::section:first {
+  border-top-left-radius: 8px;
+}
+
+/* Round the rightmost header cell */
+QHeaderView::section:last {
+  border-top-right-radius: 8px;
+}
+
+/* Top-left corner button (removes the tiny gap corner) */
+QTableCornerButton::section {
+  background-color: #107865;
+  border: none;
+  border-right: 1px solid #0d6b57;
+  border-bottom: 1px solid #0d6b57;
+}
+
+/* Remove the dotted focus rect on items for a cleaner look */
+QTableView::item:focus {
+  outline: none;
 }

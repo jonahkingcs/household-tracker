@@ -13,7 +13,9 @@ before full functionality is built.
 """
 
 from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget, QVBoxLayout, QWidget
+from PySide6.QtGui import QAction
 
+from src.views.users_dialog import UsersDialog
 
 class MainWindow(QMainWindow):
     """The main top-level window of the Household Tracker application."""
@@ -29,6 +31,14 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Household Tracker")
         self.resize(1100, 720)
+
+        # Menu: Settings -> Users...
+        menubar = self.menuBar()
+        settings_menu = menubar.addMenu("&Settings")
+
+        act_users = QAction("Users...", self)
+        act_users.triggered.connect(self.open_users_dialog)
+        settings_menu.addAction(act_users)
 
         # Create a QTabWidget to hold feature areas
         tabs = QTabWidget()
@@ -60,3 +70,7 @@ class MainWindow(QMainWindow):
         v = QVBoxLayout(w)
         v.addWidget(QLabel(text))
         return w
+
+    def open_users_dialog(self) -> None:
+        dlg = UsersDialog(self)
+        dlg.exec()
