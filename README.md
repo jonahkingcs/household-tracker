@@ -27,6 +27,37 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
 
 ---
 
+## Features Implemented So Far
+
+- **Core skeleton app**  
+  - Main window with tabs (Chores, Purchases, History, Analytics)  
+  - Light & dark QSS themes with rounded modern design  
+
+- **Database foundation**  
+  - SQLite + SQLAlchemy models for Users, Chores, Purchases, and completions  
+  - Local data storage in `~/Library/Application Support/HouseholdTracker/`  
+
+- **User management (new)**  
+  - Added **Users dialog** with table view  
+  - Integrated with DB (list users, toggle active, add new users)  
+  - Styled table: green headers, zebra rows, consistent selection colors  
+
+- **Dev utilities**  
+  - Seeding scripts for test users, chores, and purchases  
+  - Repo structure with clean separation (`src/db/repo`, `src/views`, `src/services`)  
+
+---
+
+## Upcoming Features
+
+- Chores board with scrollable widgets and logging  
+- Purchases board with logging and analytics  
+- Unified history timeline with filtering/search  
+- Analytics dashboards (pie charts + leaderboards)  
+- Gamification layer (points, streaks, rewards)  
+
+---
+
 ## Screenshots
 <p align="center">
   <img src="docs/screenshot_main.png" width="600" alt="Main Window screenshot">
@@ -70,6 +101,7 @@ python -m src.app
 ---
 
 ## Project Structure
+
 HouseholdTracker/
 ├── src/
 │   ├── app.py              # Application entry point
@@ -84,6 +116,7 @@ HouseholdTracker/
 ---
 
 ## Roadmap
+
 - Build chore & purchase widgets
 - Implement analytics dashboards
 - Add gamification (points, streaks, rewards)
@@ -92,11 +125,13 @@ HouseholdTracker/
 ---
 
 ## License
+
 This project is provided for portfolio and demonstration purposes only.  
 All rights reserved — no permission is granted to use, copy, or distribute this code.
 
 ---
 
 ## Author
+
 **Jonah King**
 - [GitHub](https://github.com/jonahkingcs)
