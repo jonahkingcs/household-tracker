@@ -11,20 +11,29 @@
 */
 
 /* Base */
-* { font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif; }
-QWidget { background-color: #121417; color: #e6e6e6; }
+* {
+  font-family: Menlo, monospace;
+}
+QWidget {
+  background-color: #121417;
+  color: #e6e6e6;
+}
 
 /* Tabs */
 QTabBar::tab {
   background: #1a1e23;
   border: 1px solid #2a2f36;
   padding: 8px 16px;
-  border-top-left-radius: 10px; border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   margin-right: 4px;
 }
-QTabBar::tab:selected { background: #22272e; }
+QTabBar::tab:selected {
+  background: #1f252b;
+  border: 1px solid #107865;
+}
 
-/* Cards (use on your chore/item widgets by setting objectName or class) */
+/* Cards */
 .QCard {
   background: #161a1f;
   border: 1px solid #2b3138;
@@ -32,15 +41,36 @@ QTabBar::tab:selected { background: #22272e; }
   padding: 12px;
 }
 
-/* Buttons */
+/* Buttons to match tab look & feel */
 QPushButton {
-  background: #2b3138;
-  border: 1px solid #39414b;
-  padding: 8px 14px;
+  background: #1a1e23;                /* like normal tab */
+  border: 1px solid #2a2f36;          /* like normal tab border */
   border-radius: 10px;
+  padding: 8px 20px;
+  color: #e6e6e6;
 }
-QPushButton:hover { background: #313842; }
-QPushButton:pressed { background: #2a3139; }
+
+QPushButton:hover {
+  background: #1f252b;                /* subtle lift */
+  border: 1px solid #107865;          /* accent border on hover */
+}
+
+QPushButton:pressed {
+  background: #107865;                /* solid accent when pressed */
+  color: #ffffff;                     /* readable text on dark */
+  border: 1px solid #107865;
+}
+
+QPushButton:default {
+  /* default action button subtle accent ring */
+  border: 1px solid #107865;
+}
+
+QPushButton:disabled {
+  background: #181c20;
+  color: #8a8f96;
+  border: 1px solid #23282f;
+}
 
 /* Inputs */
 QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
@@ -50,10 +80,88 @@ QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
   padding: 6px 8px;
 }
 
-/* Scrollbars (subtle) */
+/* ------- Scrollbars ------- */
 QScrollBar:vertical {
-  background: transparent; width: 10px; margin: 2px;
+  background: transparent;
+  width: 10px;
+  margin: 2px;
 }
+
 QScrollBar::handle:vertical {
-  background: #2b3138; border-radius: 6px; min-height: 20px;
+  background: #2b3138;
+  border-radius: 6px;
+  min-height: 20px;
+}
+
+/* Horizontal scrollbar */
+QScrollBar:horizontal {
+  background: transparent;
+  height: 10px;
+  margin: 2px;
+}
+
+QScrollBar::handle:horizontal {
+  background: #2b3138;
+  border-radius: 6px;
+  min-width: 20px;
+}
+
+/* Table: body only (header owns the top), no right border under scrollbar */
+QTableView {
+  background: #0f1916;                /* odd rows: very dark green tint */
+  border: none;
+  gridline-color: #2a2f36;
+  alternate-background-color: #12211c; /* even rows: slightly lighter green tint */
+}
+
+/* Force selected text to stay readable on dark green */
+QTableView::item:selected {
+  background: #1f3a33;  /* muted teal highlight */
+  color: #e6e6e6;
+}
+
+/* Cell padding */
+QTableView::item {
+  padding: 8px 10px;
+}
+
+/* Header */
+QHeaderView::section {
+  background-color: #107865;
+  color: #ffffff;
+  padding: 8px 10px;
+  border: none;
+  border-right: 1px solid #0d6b57;
+  border-bottom: 1px solid #2a2f36;   /* seam that meets the viewport border */
+}
+QHeaderView::section:first { border-top-left-radius: 8px; }
+QHeaderView::section:last  { border-top-right-radius: 8px; }
+
+/* Top-left header corner tile */
+QTableCornerButton::section {
+  background-color: #107865;
+  border: none;
+  border-right: 1px solid #0d6b57;
+  border-bottom: 1px solid #2a2f36;   /* same seam as header sections */
+}
+
+/* Bottom-right corner where scrollbars meet: continue the bottom border only */
+QAbstractScrollArea::corner {
+  background: #121417;
+  border: none;
+  border-top: 1px solid #2a2f36;      /* extend the bottom line under the corner */
+}
+
+/* Hide scrollbar arrows, keep modern handles */
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal { height: 0; width: 0; background: none; border: none; }
+
+QScrollBar::handle:vertical,
+QScrollBar::handle:horizontal { background: #2b3138; border-radius: 6px; }
+
+/* Remove the dotted focus rect on items for a cleaner look */
+QTableView::item:focus {
+  outline: none;
 }
