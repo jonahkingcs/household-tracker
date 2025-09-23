@@ -39,7 +39,7 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
 
 - **User management (new)**  
   - Added **Users dialog** with table view  
-  - Integrated with DB (list users, toggle active, add new users)  
+  - Integrated with DB (list users, toggle active, add new users, delete users)  
   - Styled table: green headers, zebra rows, consistent selection colors
 
 - **Dev utilities**  

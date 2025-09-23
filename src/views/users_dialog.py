@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QHeaderView,
     QInputDialog,
+    QMessageBox,
     QPushButton,
     QTableWidget,
     QTableWidgetItem,
@@ -33,7 +34,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src.db.repo.users import create_user, list_users, set_active
+from src.db.repo.users import create_user, delete_user, list_users, set_active
 from src.db.session import SessionLocal
 
 
@@ -91,29 +92,37 @@ class UsersDialog(QDialog):
         self.btn_add = QPushButton("Add User…")
         self.btn_add.clicked.connect(self.on_add_user)
 
+        top_row = QHBoxLayout()
+        top_row.addWidget(self.btn_add)
+        top_row.addStretch(1)
+
+        # Delete + Close
+        self.btn_delete = QPushButton("Delete User")
+        self.btn_delete.setEnabled(False)   # Disabled until row is selected
+        self.btn_delete.clicked.connect(self.on_delete_user)
         close_box = QDialogButtonBox(QDialogButtonBox.Close)
         close_box.rejected.connect(self.reject)
 
-        # Layout
-        top = QVBoxLayout(self)
-        row = QHBoxLayout()
-        row.addWidget(self.btn_add)
-        row.addStretch(1)
-        
-        # Wrap the table in a rounded panel
+        bottom_row = QHBoxLayout()
+        bottom_row.addWidget(self.btn_delete)   # bottom-left
+        bottom_row.addStretch(1)
+        bottom_row.addWidget(close_box)
 
-        top.addLayout(row)
-        top.addWidget(self.table)
-        top.addWidget(close_box)
+        # Layout
+        main = QVBoxLayout(self)
+        main.addLayout(top_row)
+        main.addWidget(self.table)
+        main.addLayout(bottom_row)
 
         # Signals
         self.table.itemChanged.connect(self.on_item_changed)
+        # Enable/disable Delete based on selection
+        self.table.itemSelectionChanged.connect(self.on_selection_changed)
 
         # Initial fill
         self._fill_table()
 
     # ---------- Data & UI helpers ----------
-
 
     def _fill_table(self) -> None:
         """
@@ -127,8 +136,6 @@ class UsersDialog(QDialog):
         with SessionLocal() as s:
             users = list_users(s)
 
-        # Temporarily block itemChanged signal while repopulating,
-        # so toggles don't accidentally trigger DB writes.
         self.table.blockSignals(True)
         try:
             self.table.setRowCount(0)
@@ -136,10 +143,9 @@ class UsersDialog(QDialog):
                 r = self.table.rowCount()
                 self.table.insertRow(r)
 
-                # Name (read-only)
+                # Name (read-only) + stash user_id in UserRole
                 name_item = QTableWidgetItem(u.name)
                 name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
-                # Store the user id on the name cell (used when toggling)
                 name_item.setData(Qt.UserRole, u.id)
                 self.table.setItem(r, self.COL_NAME, name_item)
 
@@ -153,7 +159,15 @@ class UsersDialog(QDialog):
         finally:
             self.table.blockSignals(False)
 
+        # After repopulating, refresh delete button state
+        self.on_selection_changed()
+
     # ---------- Slots ----------
+
+    def on_selection_changed(self, *_) -> None:
+        """Enable Delete only when a row is selected."""
+        has_selection = self.table.currentRow() >= 0
+        self.btn_delete.setEnabled(has_selection)
 
     def on_add_user(self) -> None:
         """
@@ -171,6 +185,43 @@ class UsersDialog(QDialog):
             create_user(s, name=name)
         self._fill_table()
 
+    def on_delete_user(self) -> None:
+        """
+        Hard-delete the selected user after confirmation.
+        History remains (user_id set to NULL); chores/items reassign next user if possible.
+        """
+        row = self.table.currentRow()
+        if row < 0:
+            return
+
+        name_item = self.table.item(row, self.COL_NAME)
+        if not name_item:
+            return
+
+        user_name = name_item.text()
+        user_id = name_item.data(Qt.UserRole)
+
+        # Confirm
+        msg = QMessageBox(self)
+        msg.setWindowTitle("Delete User")
+        msg.setText(f"Are you sure you want to delete “{user_name}”?")
+        msg.setInformativeText("This permanently removes the user.\n \n")
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msg.setDefaultButton(QMessageBox.No)
+
+        # Hide the icon:
+        msg.setIcon(QMessageBox.Icon.NoIcon)
+
+        resp = msg.exec()
+        if resp != QMessageBox.Yes:
+            return
+
+        with SessionLocal() as s:
+            delete_user(s, user_id=user_id)
+
+        self._fill_table()
+
+
     def on_item_changed(self, item: QTableWidgetItem) -> None:
         """
         Handle checkbox toggles in the 'Active' column.
@@ -180,10 +231,13 @@ class UsersDialog(QDialog):
         - Write the new active state to the database.
         """
         if item.column() != self.COL_ACTIVE:
-            return  # Ignore edits in other columns
+            return
 
         row = item.row()
         name_item = self.table.item(row, self.COL_NAME)
+        if not name_item:
+            return
+
         user_id = name_item.data(Qt.UserRole)
         is_active = item.checkState() == Qt.Checked
 
