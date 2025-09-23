@@ -14,12 +14,12 @@ from src.db.session import SessionLocal, engine
 
 
 def main() -> None:
-    # Ensure tables exist (harmless if they already do)
+    # Ensure tables exist
     Base.metadata.create_all(bind=engine)
 
     sess: Session = SessionLocal()
     try:
-        # Add a user named "Jonah" (change the name if you like)
+        # Add a user to test with
         user = User(name="Joe", active=True)
         sess.add(user)
         sess.commit()

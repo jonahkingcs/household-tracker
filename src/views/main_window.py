@@ -12,10 +12,11 @@ is implemented. This scaffolding allows the UI structure to be tested
 before full functionality is built.
 """
 
-from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 from PySide6.QtGui import QAction
+from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
 from src.views.users_dialog import UsersDialog
+
 
 class MainWindow(QMainWindow):
     """The main top-level window of the Household Tracker application."""

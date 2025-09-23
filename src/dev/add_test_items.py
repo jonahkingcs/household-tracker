@@ -5,8 +5,8 @@ Run with:
     python -m src.dev.add_test_items
 """
 
-from src.db.session import SessionLocal
 from src.db import models
+from src.db.session import SessionLocal
 
 
 def main():

@@ -40,7 +40,7 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
 - **User management (new)**  
   - Added **Users dialog** with table view  
   - Integrated with DB (list users, toggle active, add new users)  
-  - Styled table: green headers, zebra rows, consistent selection colors  
+  - Styled table: green headers, zebra rows, consistent selection colors
 
 - **Dev utilities**  
   - Seeding scripts for test users, chores, and purchases  
@@ -61,6 +61,9 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
 ## Screenshots
 <p align="center">
   <img src="docs/screenshot_main.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_user_settings.png" width="600" alt="Main Window screenshot">
 </p>
 
 ---

@@ -9,10 +9,11 @@ Run with:
     python -m src.dev.add_test_purchase
 """
 
-import random
 import datetime as dt
-from src.db.session import SessionLocal
+import random
+
 from src.db import models
+from src.db.session import SessionLocal
 
 
 def main():
