@@ -12,7 +12,11 @@ is implemented. This scaffolding allows the UI structure to be tested
 before full functionality is built.
 """
 
-from PySide6.QtGui import QAction
+
+from pathlib import Path
+
+from PySide6.QtCore import QSettings
+from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
 from src.views.users_dialog import UsersDialog
@@ -40,6 +44,32 @@ class MainWindow(QMainWindow):
         act_users = QAction("Users...", self)
         act_users.triggered.connect(self.open_users_dialog)
         settings_menu.addAction(act_users)
+
+        # View -> Appearance -> Light, Dark
+        view_menu = menubar.addMenu("&View")
+        appearance_menu = view_menu.addMenu("Appearance")
+
+        self.act_light = QAction("Light Mode", self, checkable=True)
+        self.act_dark = QAction("Dark Mode", self, checkable=True)
+
+        # Exclusive selection (radio behaviour)
+        group = QActionGroup(self)
+        group.setExclusive(True)
+        group.addAction(self.act_light)
+        group.addAction(self.act_dark)
+
+        appearance_menu.addAction(self.act_light)
+        appearance_menu.addAction(self.act_dark)
+
+        # Load savaed mode and apply checkmarks + stylesheet
+        mode = self._current_theme_mode()   # light or dark
+        self._apply_theme(mode)
+        self.act_light.setChecked(mode == "light")
+        self.act_dark.setChecked(mode == "dark")
+
+        # Switch theme when toggled ON (avoid double triggers)
+        self.act_light.toggled.connect(lambda checked: checked and self._apply_theme("light"))
+        self.act_dark.toggled.connect(lambda checked: checked and self._apply_theme("dark"))
 
         # Create a QTabWidget to hold feature areas
         tabs = QTabWidget()
@@ -75,3 +105,36 @@ class MainWindow(QMainWindow):
     def open_users_dialog(self) -> None:
         dlg = UsersDialog(self)
         dlg.exec()
+
+    def _current_theme_mode(self) -> str:
+        """Read saved theme mode from QSettings. Defaults to 'light'."""
+        settings = QSettings()
+        return settings.value("appearance/mode", "light")
+
+    def _apply_theme(self, mode: str) -> None:
+        """
+        Apply light/dark QSS to the whole app and persist choice.
+        """
+        # Persist
+        settings = QSettings()
+        settings.setValue("appearance/mode", mode)
+
+        # Load QSS
+        # styles directory is at src/styles relative to this file
+        styles_dir = Path(__file__).resolve().parent.parent / "styles"
+        qss_file = styles_dir / f"rounded_{'dark' if mode == 'dark' else 'light'}.qss"
+        qss = qss_file.read_text(encoding="utf-8") if qss_file.exists() else ""
+
+        # Apply to the whole application
+        app = self.window().windowHandle().screen().virtualSiblings()  # not needed; just illustrating scope
+        self.window().windowHandle()  # noop; ensures window exists
+
+        # Simpler: just set on QApplication
+        from PySide6.QtWidgets import QApplication
+        QApplication.instance().setStyleSheet(qss)
+
+        # Keep menu checkmarks in sync if changed elsewhere
+        if hasattr(self, "act_light") and hasattr(self, "act_dark"):
+            self.act_light.setChecked(mode == "light")
+            self.act_dark.setChecked(mode == "dark")
+
