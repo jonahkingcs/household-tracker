@@ -19,6 +19,7 @@ from PySide6.QtCore import QSettings
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
+from src.views.chore_board import ChoreBoard
 from src.views.users_dialog import UsersDialog
 
 
@@ -73,7 +74,7 @@ class MainWindow(QMainWindow):
 
         # Create a QTabWidget to hold feature areas
         tabs = QTabWidget()
-        tabs.addTab(self._make_placeholder("Chores board coming soon…"), "Chores")
+        tabs.addTab(ChoreBoard(self), "Chores") 
         tabs.addTab(self._make_placeholder("Purchases board coming soon…"), "Purchases")
         tabs.addTab(self._make_placeholder("History timeline coming soon…"), "History")
         tabs.addTab(self._make_placeholder("Analytics coming soon…"), "Analytics")
@@ -126,7 +127,6 @@ class MainWindow(QMainWindow):
         qss = qss_file.read_text(encoding="utf-8") if qss_file.exists() else ""
 
         # Apply to the whole application
-        app = self.window().windowHandle().screen().virtualSiblings()  # not needed; just illustrating scope
         self.window().windowHandle()  # noop; ensures window exists
 
         # Simpler: just set on QApplication

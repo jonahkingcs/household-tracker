@@ -33,10 +33,10 @@ def load_qss(app):
     """
     Load and apply the global QSS stylesheet if present.
 
-    Looks for `styles/rounded_light.qss` relative to this file and, if found,
+    Looks for `styles/rounded_dark.qss` relative to this file and, if found,
     applies it to the entire application. Missing stylesheet is a no-op.
     """
-    qss_path = Path(__file__).with_name("styles") / "rounded_light.qss"
+    qss_path = Path(__file__).with_name("styles") / "rounded_dark.qss"
     if qss_path.exists():
         # Use Path.read_text to avoid UP015 ("unnecessary mode argument")
         app.setStyleSheet(qss_path.read_text(encoding="utf-8"))
@@ -61,14 +61,11 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName("Household Tracker")
 
-    # 3) Apply global stylesheet (safe if the file is missing)
-    load_qss(app)
-
-    # 4) Build and show the main window (the rest of the app hangs off this)
+    # 3) Build and show the main window (the rest of the app hangs off this)
     win = MainWindow()
     win.show()
 
-    # 5) Enter the Qt event loop; return its exit code to the OS
+    # 4) Enter the Qt event loop; return its exit code to the OS
     sys.exit(app.exec())
 
 
