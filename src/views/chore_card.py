@@ -7,11 +7,12 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
-    QPushButton,
     QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
+
+from src.ui.widgets.fade_button import FadeButton
 
 CARD_H = 200   # uniform height for all cards
 
@@ -45,8 +46,8 @@ class ChoreCard(QWidget):
         v.addWidget(meta)
 
         row = QHBoxLayout()
-        btn_complete = QPushButton("Complete…")
-        btn_edit = QPushButton("Edit…")
+        btn_complete = FadeButton("Complete…", hover_color="#f5dcf4", hover_alpha=90)
+        btn_edit     = FadeButton("Complete…", hover_color="#f5dcf4", hover_alpha=90)
         row.addWidget(btn_complete)
         row.addStretch(1)
         row.addWidget(btn_edit)

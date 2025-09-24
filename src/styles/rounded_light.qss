@@ -50,10 +50,7 @@ QPushButton {
   color: #1a1a1a;
 }
 
-QPushButton:hover {
-  background: #f5dcf4;                /* same as selected tab background */
-  border: 1px solid #107865;          /* accent border on hover */
-}
+
 
 QPushButton:pressed {
   background: #107865;                /* solid accent when pressed */
@@ -169,8 +166,8 @@ QTableView::item:focus {
 /* ==== Chore cards ==== */
 /* Chore cards */
 QWidget#ChoreCard {
-  background: #ffffff;
-  border: 1px solid #d0d0d0;
+  background: #f2faf2;
+  border: 1px solid #cfe8cf;
   border-radius: 14px;
 }
 
