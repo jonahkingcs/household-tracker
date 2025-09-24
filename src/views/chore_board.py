@@ -16,6 +16,7 @@ from src.db.session import SessionLocal
 from src.services.dates import humanize_due
 from src.views.chore_card import ChoreCard
 from src.views.complete_chore_dialog import CompleteChoreDialog
+from src.views.edit_chore_dialog import EditChoreDialog
 
 
 def _assignee_label(chore) -> str:
@@ -72,6 +73,7 @@ class ChoreBoard(QWidget):
 
             # Hook up actions
             card.completeClicked.connect(self._on_complete)
+            card.editClicked.connect(self._on_edit)
 
             # Let the card fill its cell (no alignment flags)
             self.grid.addWidget(card, r, c)
@@ -82,4 +84,9 @@ class ChoreBoard(QWidget):
         dlg = CompleteChoreDialog(chore_id, self)
         if dlg.exec():
             # after completion, refresh board
+            self.refresh()
+
+    def _on_edit(self, chore_id: str):
+        dlg = EditChoreDialog(chore_id, self)
+        if dlg.exec():
             self.refresh()
