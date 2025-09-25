@@ -60,7 +60,7 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
 
 ## Screenshots
 <p align="center">
-  <img src="docs/screenshot_main.png" width="600" alt="Main Window screenshot">
+  <img src="docs/screenshot_chore_board.png" width="600" alt="Main Window screenshot">
 </p>
 <p align="center">
   <img src="docs/screenshot_user_settings.png" width="600" alt="Main Window screenshot">
