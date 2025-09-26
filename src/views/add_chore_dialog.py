@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QSpinBox,
+    QTextEdit,
     QVBoxLayout,
 )
 
@@ -37,6 +38,7 @@ class AddChoreDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Add Chore")
+        self.setMinimumWidth(520) # wider popup to make room for the description
 
         # ---- Layout scaffolding ----
         v = QVBoxLayout(self)
@@ -53,6 +55,13 @@ class AddChoreDialog(QDialog):
         self.spn_freq.setRange(1, 365)
         self.spn_freq.setValue(7)       # default weekly rotation
         form.addRow("Frequency (days):", self.spn_freq)
+
+        # ---- Description (optional, multi-line) ----
+        self.txt_desc = QTextEdit()
+        self.txt_desc.setPlaceholderText("Optional")  # shows greyed placeholder text
+        # Make it ~2 lines tall (simple, readable default)
+        self.txt_desc.setFixedHeight(60)
+        form.addRow("Description:", self.txt_desc)
 
         # ---- First assignee (active users only) ----
         self.cmb_user = QComboBox()
@@ -80,6 +89,7 @@ class AddChoreDialog(QDialog):
         """Validate inputs and create the chore; accept dialog on success."""
         name = self.txt_name.text().strip()
         freq = self.spn_freq.value()
+        desc = self.txt_desc.toPlainText().strip() # optional (may be "")
         assignee_id = self.cmb_user.currentData()
 
         # Basic validation
@@ -93,7 +103,7 @@ class AddChoreDialog(QDialog):
                 create_chore(
                         s,
                         name=name,
-                        description="", # optional field left blank here
+                        description=desc, # pass optional description
                         frequency_days=freq,
                         assignee_id=assignee_id
                     )
