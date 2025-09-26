@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QSpinBox,
+    QTextEdit,
     QVBoxLayout,
 )
 
@@ -24,6 +25,7 @@ class EditChoreDialog(QDialog):
         super().__init__(parent)
         self.chore_id = chore_id
         self.setWindowTitle("Edit Chore")
+        self.setMinimumWidth(520) # room for description
 
         v = QVBoxLayout(self)
         form = QFormLayout()
@@ -48,6 +50,13 @@ class EditChoreDialog(QDialog):
         self.spn_freq.setValue(int(ch.frequency_days or 1))
         form.addRow("Frequency (days):", self.spn_freq)
 
+        # Description (optional, multi-line)
+        self.txt_desc = QTextEdit()
+        self.txt_desc.setPlaceholderText("Optional")
+        self.txt_desc.setFixedHeight(60)  # ~2 lines
+        self.txt_desc.setPlainText(ch.description or "")
+        form.addRow("Description:", self.txt_desc)
+
         # Buttons
         box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
         box.accepted.connect(self._on_save)
@@ -57,6 +66,7 @@ class EditChoreDialog(QDialog):
     def _on_save(self) -> None:
         name = self.txt_name.text().strip()
         freq = self.spn_freq.value()
+        desc = self.txt_desc.toPlainText().strip()
 
         if not name:
             QMessageBox.warning(self, "Validation", "Please enter a name.")
@@ -64,7 +74,12 @@ class EditChoreDialog(QDialog):
 
         try:
             with SessionLocal() as s:
-                update_chore(s, self.chore_id, name=name, frequency_days=freq)
+                update_chore(s,
+                             self.chore_id,
+                             name=name,
+                             frequency_days=freq,
+                             description=desc,
+                             )
         except Exception as e:
             QMessageBox.critical(self, "Save Failed", str(e))
             return
