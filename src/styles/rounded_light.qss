@@ -169,12 +169,22 @@ QWidget#ChoreCard {
   background: #f2faf2;
   border: 1px solid #cfe8cf;
   border-radius: 14px;
+  margin: 0;
+  padding: 0;
 }
 
-/* Optional: slightly softer text for the meta line */
+/* Slightly softer text for the description line */
+QLabel[choreDesc="true"] {
+  color: #6f6f6f;
+  font-size: 12px;
+}
+
+/* Slightly softer text for the meta line */
 QLabel[choreMeta="true"] {
   color: #6b6b6b;
   font-size: 12px;
+  margin: 0;
+  padding: 0;
 }
 
 /* Buttons look nicer with rounded corners */

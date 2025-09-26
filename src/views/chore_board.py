@@ -120,7 +120,13 @@ class ChoreBoard(QWidget):
             due_text = humanize_due(ch.next_due_date)
 
             # Build a card for this chore
-            card = ChoreCard(ch.id, ch.name, due_text, _assignee_label(ch))
+            card = ChoreCard(
+                ch.id,
+                ch.name,
+                ch.description or "",
+                due_text,
+                _assignee_label(ch)
+                )
 
             # Hook up actions so the board can respond
             card.completeClicked.connect(self._on_complete)

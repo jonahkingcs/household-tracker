@@ -42,13 +42,22 @@ class ChoreCard(QWidget):
     completeClicked = Signal(str)
     editClicked = Signal(str)
 
-    def __init__(self, chore_id: str, name: str, due_text: str, assignee_text: str, parent=None):
+    def __init__(
+        self,
+        chore_id: str,
+        name: str,
+        description: str,
+        due_text: str,
+        assignee_text: str,
+        parent=None
+    ):
         """
         Build the card UI.
 
         Args:
             chore_id: Identifier for the chore (propagated via signals).
             name: Title of the chore.
+            description: Description of the chore.
             due_text: Humanized due info (e.g., "Today", "in 2d").
             assignee_text: Display name of the next assignee.
             parent: Optional Qt parent.
@@ -67,17 +76,39 @@ class ChoreCard(QWidget):
         # ---- Layout scaffolding ----
         v = QVBoxLayout(self)
         v.setContentsMargins(12, 12, 12, 12)
-        v.setSpacing(8)
+        v.setSpacing(0)  # no default gaps between rows
 
-        # Title
+        # Title + Description grouped with zero spacing
+        hdr = QVBoxLayout()
+        hdr.setContentsMargins(0, 0, 0, 0)
+        hdr.setSpacing(0)
+
         title = QLabel(name)
-        title.setStyleSheet("font-weight: 600; font-size: 14pt;")   # or via QSS if you prefer
-        v.addWidget(title)
+        title.setMargin(0)
+        title.setContentsMargins(0, 0, 0, 0)
+        title.setIndent(0)
+        title.setStyleSheet("font-weight: 600; font-size: 14pt; margin: 0; padding: 0;")
+        hdr.addWidget(title)
+
+        self._desc_label = QLabel((description or "").strip())
+        self._desc_label.setWordWrap(True)
+        self._desc_label.setMargin(0)
+        self._desc_label.setContentsMargins(0, 0, 0, 0)
+        self._desc_label.setIndent(0)
+        self._desc_label.setProperty("choreDesc", True)
+        self._desc_label.setVisible(bool(self._desc_label.text()))
+        hdr.addWidget(self._desc_label)
+
+        v.addLayout(hdr)
+
+        # Small gap before meta line
+        v.addSpacing(6)
 
         # Meta line: due + next assignee
-        meta = QLabel(f"Due: {due_text}  •  Next: {assignee_text}")
-        meta.setProperty("choreMeta", True)  # picked up by QSS for subtle color/size
-        v.addWidget(meta)
+        self._meta_label = QLabel(f"Due: {due_text}  •  Next: {assignee_text}")
+        self._meta_label.setProperty("choreMeta", True)
+        self._meta_label.setContentsMargins(0, 0, 0, 0)
+        v.addWidget(self._meta_label)
 
         # Actions row: Complete / Edit
         row = QHBoxLayout()
@@ -101,5 +132,4 @@ class ChoreCard(QWidget):
             assignee_text: Updated next-assignee display name.
         """
         # Children order: 0 = title, 1 = meta label, 2 = button row.
-        meta: QLabel = self.layout().itemAt(1).widget() # type: ignore[assignment]
-        meta.setText(f"Due: {due_text}  •  Next: {assignee_text}")
+        self._meta_label.setText(f"Due: {due_text}  •  Next: {assignee_text}")
