@@ -4,6 +4,7 @@ edit_chore_dialog.py — Edit a chore's name and frequency (days).
 from __future__ import annotations
 
 from PySide6.QtWidgets import (
+    QAbstractSpinBox,
     QDialog,
     QDialogButtonBox,
     QFormLayout,
@@ -48,6 +49,7 @@ class EditChoreDialog(QDialog):
         self.spn_freq = QSpinBox()
         self.spn_freq.setRange(1, 365)          # sane range; adjust if you like
         self.spn_freq.setValue(int(ch.frequency_days or 1))
+        self.spn_freq.setButtonSymbols(QAbstractSpinBox.NoButtons)   # hide arrows
         form.addRow("Frequency (days):", self.spn_freq)
 
         # Description (optional, multi-line)

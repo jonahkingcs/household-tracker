@@ -77,6 +77,19 @@ QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
   padding: 6px 8px;
 }
 
+/* Flat arrow on combo boxes (no boxed button) */
+QComboBox {
+  padding-right: 28px;              /* leave space for the arrow */
+}
+QComboBox::drop-down {
+  background: transparent;          /* remove the rectangle */
+  border: none;
+  width: 20px;
+  subcontrol-origin: padding;
+  subcontrol-position: center right;
+  margin-right: 6px;
+}
+
 /* ------- Scrollbars ------- */
 QScrollBar:vertical {
   background: transparent;
