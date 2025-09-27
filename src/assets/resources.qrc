@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="/icons">
+    <!-- Alias ensures the resource path is exactly :/icons/arrow_down.png -->
+    <file alias="arrow_down.png">icons/arrow_down.png</file>
+    <file alias="arrow_down_light.png">icons/arrow_down_light.png</file>
+    <file alias="arrow_down_spn.png">icons/arrow_down_spn.png</file>
+    <file alias="arrow_down_spn_light.png">icons/arrow_down_spn_light.png</file>
+    <file alias="arrow_up_spn.png">icons/arrow_up_spn.png</file>
+    <file alias="arrow_up_spn_light.png">icons/arrow_up_spn_light.png</file>
+    <!-- If you have a light-ink version for dark mode, alias it too -->
+    <!-- <file alias="arrow_down_light.png">icons/arrow_down_light.png</file> -->
+  </qresource>
+</RCC>

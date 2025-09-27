@@ -78,17 +78,63 @@ QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
 }
 
 /* Flat arrow on combo boxes (no boxed button) */
-QComboBox {
-  padding-right: 28px;              /* leave space for the arrow */
-}
+QComboBox { padding-right: 28px; }
+
 QComboBox::drop-down {
-  background: transparent;          /* remove the rectangle */
+  background: transparent;
   border: none;
   width: 20px;
   subcontrol-origin: padding;
   subcontrol-position: center right;
   margin-right: 6px;
 }
+
+QComboBox::down-arrow {
+  width: 12px; height: 12px;
+  image: url(:/icons/arrow_down.png);
+}
+
+/* ---- SpinBox: flat arrow buttons (no boxed look) ---- */
+QAbstractSpinBox { padding-right: 28px; }   /* leave room for arrows */
+
+QSpinBox::up-button,
+QSpinBox::down-button {
+  background: transparent;    /* remove the rectangle */
+  border: none;
+  width: 18px;                 /* click area width */
+  height: 14px;                /* click area height */
+  padding: 0;
+  margin: 0;
+  /* position the buttons at the right edge, top/bottom */
+  subcontrol-origin: padding;
+}
+
+QSpinBox::up-button   { subcontrol-position: top right;    margin-right: 6px; margin-top: 2px; }
+QSpinBox::down-button { subcontrol-position: bottom right; margin-right: 6px; margin-bottom: 2px; }
+
+/* keep them flat on hover/press/focus */
+QSpinBox::up-button:hover,
+QSpinBox::down-button:hover,
+QSpinBox::up-button:pressed,
+QSpinBox::down-button:pressed,
+QSpinBox::up-button:off,
+QSpinBox::down-button:off {
+  background: transparent;
+  border: none;
+}
+
+/* your custom arrow PNGs */
+QSpinBox::down-arrow {
+  width: 12px; height: 12px;
+  image: url(:/icons/arrow_down_spn);
+}
+QSpinBox::up-arrow {
+  width: 12px; height: 12px;
+  image: url(:/icons/arrow_up_spn);
+}
+
+/* hide arrows when disabled */
+QSpinBox::up-arrow:disabled, QSpinBox::down-arrow:disabled { image: none; }
 
 /* ------- Scrollbars ------- */
 QScrollBar:vertical {

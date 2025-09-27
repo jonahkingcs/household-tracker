@@ -16,7 +16,6 @@ Behavior
 from __future__ import annotations
 
 from PySide6.QtWidgets import (
-    QAbstractSpinBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
@@ -55,7 +54,6 @@ class AddChoreDialog(QDialog):
         self.spn_freq = QSpinBox()
         self.spn_freq.setRange(1, 365)
         self.spn_freq.setValue(7)       # default weekly rotation
-        self.spn_freq.setButtonSymbols(QAbstractSpinBox.NoButtons)  # hide arrows
         form.addRow("Frequency (days):", self.spn_freq)
 
         # ---- Description (optional, multi-line) ----

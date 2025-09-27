@@ -24,6 +24,11 @@ from pathlib import Path
 from PySide6.QtWidgets import QApplication
 
 # First-party
+try:
+    import src.assets.resources_rc  # noqa: F401
+except Exception as e:
+    # Resource not compiled yet; combos will fall back to default arrow
+    print("⚠️ Qt resources not loaded:", e)
 from src.db.models import Base
 from src.db.session import engine
 from src.views.main_window import MainWindow
@@ -67,7 +72,6 @@ def main():
 
     # 4) Enter the Qt event loop; return its exit code to the OS
     sys.exit(app.exec())
-
 
 if __name__ == "__main__":
     # When run as a script, execute the bootstrap
