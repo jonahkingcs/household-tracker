@@ -222,15 +222,21 @@ QTableView::item:focus {
   outline: none;
 }
 
-/* ==== Chore cards ==== */
-/* Chore cards */
+/* ==== Chore cards with pixel 9-slice ==== */
 QWidget#ChoreCard {
-  background: #f2faf2;
-  border: 1px solid #cfe8cf;
-  border-radius: 14px;
-  margin: 0;
-  padding: 0;
+  /* reserve space for the 10px slices */
+  border: 10px solid transparent;
+
+  /* paint the nine-slice; slices = top right bottom left */
+  border-image: url(:/ui/pixel_card_normal.png) 20 20 20 20 repeat;
+
+  /* the center is painted by border-image; keep bg transparent */
+  background: transparent;
+
+  /* inner spacing for content (added inside the border) */
+  padding: 12px;
 }
+
 
 /* Slightly softer text for the description line */
 QLabel[choreDesc="true"] {
