@@ -25,12 +25,11 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
+    QPushButton,
     QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
-
-from src.ui.widgets.fade_button import FadeButton
 
 # Uniform height so cards in the same row align neatly.
 CARD_H = 200   # uniform height for all cards
@@ -113,10 +112,8 @@ class ChoreCard(QWidget):
         # Actions row: Complete / Edit
         row = QHBoxLayout()
 
-        btn_complete = FadeButton("Complete…", hover_color="#f5dcf4", hover_alpha=90,
-                                radius_px=0, overlay_inset=20)
-        btn_edit     = FadeButton("Edit…",     hover_color="#f5dcf4", hover_alpha=90,
-                                radius_px=0, overlay_inset=20)
+        btn_complete = QPushButton("Complete…")
+        btn_edit     = QPushButton("Edit…")
 
         row.addWidget(btn_complete)
         row.addStretch(1)   # push Edit to the far right
