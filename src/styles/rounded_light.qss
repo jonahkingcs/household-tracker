@@ -261,6 +261,10 @@ QWidget#ChoreCard QPushButton {
   color: #1a1a1a;                                     /* keep text dark */
 }
 
+QWidget#ChoreCard QPushButton:hover {
+  border-image: url(:/ui/pixel_button_hover.png) 20 20 20 20 repeat;
+}
+
 /* Don’t let the global pressed rule override these buttons */
 QWidget#ChoreCard QPushButton:pressed {
   border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat; /* or a pressed variant */
