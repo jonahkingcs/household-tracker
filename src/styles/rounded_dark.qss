@@ -203,20 +203,27 @@ QLabel[choreMeta="true"] {
   padding: 0;
 }
 
-/* Buttons inside ChoreCard (keep using your existing button PNGs for now) */
-QWidget#ChoreCard QPushButton {
-  border: 10px solid transparent;
-  border-image: url(:/ui/pixel_button_dark_normal.png) 20 20 20 20 repeat;  /* swap to dark asset later */
-  background: transparent;
-  border-radius: 0;
-  color: #e6e6e6;
-  padding: 6px 12px;
-  font-size: 12px;
-}
 QWidget#ChoreCard QPushButton:hover {
   border-image: url(:/ui/pixel_button_hover.png) 20 20 20 20 repeat;   /* swap to dark asset later */
 }
+
 QWidget#ChoreCard QPushButton:pressed {
   border-image: url(:/ui/pixel_button_pressed.png) 20 20 20 20 repeat; /* swap to dark asset later */
   color: #e6e6e6;
+}
+
+/* Buttons inside ChoreCard: force pixel 9-slice */
+QWidget#ChoreCard QPushButton {
+  /* MUST set border width for border-image to render */
+  border: 10px solid transparent;
+
+  /* your @2x PNG that worked before */
+  border-image: url(:/ui/pixel_button_dark_normal.png) 20 20 20 20 repeat;
+
+  /* override globals that can interfere */
+  border-radius: 0;
+  background: transparent;
+
+  color: #e6e6e6;
+  padding: 6px 12px;
 }
