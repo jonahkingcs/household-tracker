@@ -112,8 +112,12 @@ class ChoreCard(QWidget):
 
         # Actions row: Complete / Edit
         row = QHBoxLayout()
-        btn_complete = FadeButton("Complete…", hover_color="#f5dcf4", hover_alpha=90)
-        btn_edit     = FadeButton("Edit…", hover_color="#f5dcf4", hover_alpha=90)
+
+        btn_complete = FadeButton("Complete…", hover_color="#f5dcf4", hover_alpha=90,
+                                radius_px=0, overlay_inset=20)
+        btn_edit     = FadeButton("Edit…",     hover_color="#f5dcf4", hover_alpha=90,
+                                radius_px=0, overlay_inset=20)
+
         row.addWidget(btn_complete)
         row.addStretch(1)   # push Edit to the far right
         row.addWidget(btn_edit)

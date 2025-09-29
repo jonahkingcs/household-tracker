@@ -52,7 +52,8 @@ class FadeButton(QPushButton):
         hover_color: str | QColor = "#f5dcf4",
         hover_alpha: int = 90,
         duration_ms: int = 200,
-        radius_px: int = 10,
+        radius_px=0,
+        overlay_inset=0,
         parent=None,
     ) -> None:
         super().__init__(text, parent)
@@ -68,17 +69,18 @@ class FadeButton(QPushButton):
         self._hover = hover
         self._current = QColor(base)
         self._radius = radius_px
+        self._inset = overlay_inset
 
         # Ensure we receive hover events and can paint our own background.
         self.setAttribute(Qt.WA_Hover, True)
-        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setAttribute(Qt.WA_StyledBackground, True)    
 
         # Keep the widget's own background transparent; we paint the tint.
         # (This gets overwritten below by _set_text_color but is kept here
         # for clarity; both styles specify transparent bg + radius.)
         self.setStyleSheet(
             f"QPushButton {{ background-color: transparent; border-radius: {radius_px}px; }}"
-            )
+            ) 
 
         # Animate color values smoothly in/out on hover.
         self._anim = QVariantAnimation(
@@ -141,8 +143,7 @@ class FadeButton(QPushButton):
             p.setRenderHint(QPainter.Antialiasing, True)
             p.setPen(Qt.NoPen)
             p.setBrush(self._current)
-            # Slightly shrink rect on the right/bottom so the arc looks crisp.
-            r = self.rect().adjusted(0, 0, -1, -1)
-            p.drawRoundedRect(r, self._radius, self._radius)
-
+            # paint only the center (inside the 9-slice border)
+            r = self.rect().adjusted(self._inset, self._inset, -self._inset, -self._inset)
+            p.drawRoundedRect(r, self._radius, self._radius)  # radius 0 is fine
         super().paintEvent(e)
