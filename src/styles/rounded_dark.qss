@@ -1,13 +1,9 @@
 /*
   Dark rounded theme for Household Tracker.
 
-  Inspired by macOS/iOS modern design language:
-  - Dark neutral backgrounds (#121417 base, subtle lighter panels)
-  - Rounded corners on tabs, cards, buttons, and inputs
-  - Subtle hover/pressed states for buttons
-  - Minimal scrollbar styling
-
-  Apply via: app.setStyleSheet(open("rounded_dark.qss").read())
+  Mirrors the light theme structure, but with dark colors and the dark
+  pixel card border image. Buttons keep the same general styling; swap
+  to dark button PNGs later when you have them.
 */
 
 /* Base */
@@ -30,10 +26,10 @@ QTabBar::tab {
 }
 QTabBar::tab:selected {
   background: #1f252b;
-  border: 1px solid #107865;
+  border: 1px solid #107865;   /* accent match */
 }
 
-/* Cards */
+/* Cards (generic .QCard, if used elsewhere) */
 .QCard {
   background: #161a1f;
   border: 1px solid #2b3138;
@@ -41,31 +37,22 @@ QTabBar::tab:selected {
   padding: 12px;
 }
 
-/* Buttons to match tab look & feel */
+/* Buttons (global) */
 QPushButton {
-  background: #1a1e23;                /* like normal tab */
-  border: 1px solid #2a2f36;          /* like normal tab border */
+  background: #1a1e23;
+  border: 1px solid #2a2f36;
   border-radius: 10px;
   padding: 8px 20px;
   color: #e6e6e6;
 }
-
-QPushButton:hover {
-  background: #1f252b;                /* subtle lift */
-  border: 1px solid #107865;          /* accent border on hover */
-}
-
 QPushButton:pressed {
-  background: #107865;                /* solid accent when pressed */
-  color: #ffffff;                     /* readable text on dark */
+  background: #107865;
+  color: #ffffff;
   border: 1px solid #107865;
 }
-
 QPushButton:default {
-  /* default action button subtle accent ring */
   border: 1px solid #107865;
 }
-
 QPushButton:disabled {
   background: #181c20;
   color: #8a8f96;
@@ -80,47 +67,88 @@ QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
   padding: 6px 8px;
 }
 
-/* ------- Scrollbars ------- */
+/* ComboBox (flat arrow) */
+QComboBox { padding-right: 28px; }
+QComboBox::drop-down {
+  background: transparent;
+  border: none;
+  width: 20px;
+  subcontrol-origin: padding;
+  subcontrol-position: center right;
+  margin-right: 6px;
+}
+QComboBox::down-arrow {
+  width: 12px; height: 12px;
+  image: url(:/icons/arrow_down.png);  /* reuse until you add a dark arrow */
+}
+
+/* SpinBox (flat up/down) */
+QAbstractSpinBox { padding-right: 28px; }
+QSpinBox::up-button,
+QSpinBox::down-button {
+  background: transparent;
+  border: none;
+  width: 18px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  subcontrol-origin: padding;
+}
+QSpinBox::up-button   { subcontrol-position: top right;    margin-right: 6px; margin-top: 2px; }
+QSpinBox::down-button { subcontrol-position: bottom right; margin-right: 6px; margin-bottom: 2px; }
+QSpinBox::up-button:hover,
+QSpinBox::down-button:hover,
+QSpinBox::up-button:pressed,
+QSpinBox::down-button:pressed,
+QSpinBox::up-button:off,
+QSpinBox::down-button:off {
+  background: transparent;
+  border: none;
+}
+QSpinBox::down-arrow {
+  width: 12px; height: 12px;
+  image: url(:/icons/arrow_down_spn);
+}
+QSpinBox::up-arrow {
+  width: 12px; height: 12px;
+  image: url(:/icons/arrow_up_spn);
+}
+QSpinBox::up-arrow:disabled,
+QSpinBox::down-arrow:disabled { image: none; }
+
+/* Scrollbars */
 QScrollBar:vertical {
   background: transparent;
   width: 10px;
   margin: 2px;
 }
-
 QScrollBar::handle:vertical {
   background: #2b3138;
   border-radius: 6px;
   min-height: 20px;
 }
-
-/* Horizontal scrollbar */
 QScrollBar:horizontal {
   background: transparent;
   height: 10px;
   margin: 2px;
 }
-
 QScrollBar::handle:horizontal {
   background: #2b3138;
   border-radius: 6px;
   min-width: 20px;
 }
 
-/* Table: body only (header owns the top), no right border under scrollbar */
+/* Table view */
 QTableView {
-  background: #0f1916;                /* odd rows: very dark green tint */
+  background: #0f1916;
   border: none;
   gridline-color: #2a2f36;
-  alternate-background-color: #12211c; /* even rows: slightly lighter green tint */
+  alternate-background-color: #12211c;
 }
-
-/* Force selected text to stay readable on dark green */
 QTableView::item:selected {
-  background: #1f3a33;  /* muted teal highlight */
+  background: #1f3a33;
   color: #e6e6e6;
 }
-
-/* Cell padding */
 QTableView::item {
   padding: 8px 10px;
 }
@@ -132,36 +160,63 @@ QHeaderView::section {
   padding: 8px 10px;
   border: none;
   border-right: 1px solid #0d6b57;
-  border-bottom: 1px solid #2a2f36;   /* seam that meets the viewport border */
+  border-bottom: 1px solid #2a2f36;
 }
 QHeaderView::section:first { border-top-left-radius: 8px; }
 QHeaderView::section:last  { border-top-right-radius: 8px; }
-
-/* Top-left header corner tile */
 QTableCornerButton::section {
   background-color: #107865;
   border: none;
   border-right: 1px solid #0d6b57;
-  border-bottom: 1px solid #2a2f36;   /* same seam as header sections */
+  border-bottom: 1px solid #2a2f36;
 }
-
-/* Bottom-right corner where scrollbars meet: continue the bottom border only */
 QAbstractScrollArea::corner {
   background: #121417;
   border: none;
-  border-top: 1px solid #2a2f36;      /* extend the bottom line under the corner */
+  border-top: 1px solid #2a2f36;
 }
 
-/* Hide scrollbar arrows, keep modern handles */
-QScrollBar::add-line:vertical,
-QScrollBar::sub-line:vertical,
-QScrollBar::add-line:horizontal,
-QScrollBar::sub-line:horizontal { height: 0; width: 0; background: none; border: none; }
+/* ==== Chore cards with pixel 9-slice (DARK) ==== */
+QWidget#ChoreCard {
+  /* reserve space for the 10px slices */
+  border: 10px solid transparent;
 
-QScrollBar::handle:vertical,
-QScrollBar::handle:horizontal { background: #2b3138; border-radius: 6px; }
+  /* paint the nine-slice; slices = top right bottom left */
+  border-image: url(:/ui/pixel_card_dark.png) 20 20 20 20 repeat;
 
-/* Remove the dotted focus rect on items for a cleaner look */
-QTableView::item:focus {
-  outline: none;
+  /* the center is painted by border-image; keep bg transparent */
+  background: transparent;
+
+  /* inner spacing for content (added inside the border) */
+  padding: 12px;
+}
+
+/* Description / meta text tones */
+QLabel[choreDesc="true"] {
+  color: #a6a6a6;
+  font-size: 12px;
+}
+QLabel[choreMeta="true"] {
+  color: #9aa0a6;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Buttons inside ChoreCard (keep using your existing button PNGs for now) */
+QWidget#ChoreCard QPushButton {
+  border: 10px solid transparent;
+  border-image: url(:/ui/pixel_button_dark_normal.png) 20 20 20 20 repeat;  /* swap to dark asset later */
+  background: transparent;
+  border-radius: 0;
+  color: #e6e6e6;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+QWidget#ChoreCard QPushButton:hover {
+  border-image: url(:/ui/pixel_button_hover.png) 20 20 20 20 repeat;   /* swap to dark asset later */
+}
+QWidget#ChoreCard QPushButton:pressed {
+  border-image: url(:/ui/pixel_button_pressed.png) 20 20 20 20 repeat; /* swap to dark asset later */
+  color: #e6e6e6;
 }

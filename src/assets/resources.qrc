@@ -13,8 +13,12 @@
   <qresource prefix="/ui">
     <file alias="pixel_card_normal.png">ui/pixel_card_normal.png</file>
     <file alias="pixel_card_normal@2x.png">ui/pixel_card_normal@2x.png</file>
+    <file alias="pixel_card_dark.png">ui/pixel_card_dark.png</file>
+    <file alias="pixel_card_dark@2x.png">ui/pixel_card_dark@2x.png</file>
     <file alias="pixel_button_normal.png">ui/pixel_button_normal.png</file>
     <file alias="pixel_button_normal@2x.png">ui/pixel_button_normal@2x.png</file>
+    <file alias="pixel_button_dark_normal.png">ui/pixel_button_dark_normal.png</file>
+    <file alias="pixel_button_dark_normal@2x.png">ui/pixel_button_dark_normal@2x.png</file>
     <file alias="pixel_button_hover.png">ui/pixel_button_hover.png</file>
     <file alias="pixel_button_hover@2x.png">ui/pixel_button_hover@2x.png</file>
     <file alias="pixel_button_pressed.png">ui/pixel_button_pressed.png</file>
