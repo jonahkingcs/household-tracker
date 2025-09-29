@@ -252,24 +252,12 @@ QLabel[choreMeta="true"] {
   padding: 0;
 }
 
-/* Pixelated buttons only inside ChoreCard */
-QWidget#ChoreCard QPushButton {
-  border: 10px solid transparent;                     /* reserve slice width */
-  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
-  background: transparent;                            /* center comes from image */
-  padding: 6px 12px;
-  color: #1a1a1a;                                     /* keep text dark */
-}
-
 QWidget#ChoreCard QPushButton:hover {
   border-image: url(:/ui/pixel_button_hover.png) 20 20 20 20 repeat;
 }
 
-/* Don’t let the global pressed rule override these buttons */
 QWidget#ChoreCard QPushButton:pressed {
-  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat; /* or a pressed variant */
-  background: transparent;
-  color: #1a1a1a;
+  border-image: url(:/ui/pixel_button_pressed.png) 20 20 20 20 repeat;
 }
 
 /* Buttons inside ChoreCard: force pixel 9-slice */
@@ -286,10 +274,4 @@ QWidget#ChoreCard QPushButton {
 
   color: #1a1a1a;
   padding: 6px 12px;
-}
-
-QWidget#ChoreCard QPushButton:pressed {
-  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
-  background: transparent;
-  color: #1a1a1a;
 }
