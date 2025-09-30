@@ -11,6 +11,8 @@
     <!-- <file alias="arrow_down_light.png">icons/arrow_down_light.png</file> -->
   </qresource>
   <qresource prefix="/ui">
+    <file alias="pixel_tab_normal.png">ui/pixel_tab_normal.png</file>
+    <file alias="pixel_tab_normal@2x.png">ui/pixel_tab_normal@2x.png</file>
     <file alias="pixel_card_normal.png">ui/pixel_card_normal.png</file>
     <file alias="pixel_card_normal@2x.png">ui/pixel_card_normal@2x.png</file>
     <file alias="pixel_card_dark.png">ui/pixel_card_dark.png</file>

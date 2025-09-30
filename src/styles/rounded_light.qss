@@ -19,18 +19,40 @@ QWidget {
   color: #1a1a1a;
 }
 
-/* Tabs */
-QTabBar::tab {
-  background: #ffffff;
-  border: 1px solid #d0d0d0;
-  padding: 8px 16px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  margin-right: 4px;
+/* Pane: remove heavy frame; leave a subtle seam if you want */
+QTabWidget::pane {
+  border: none;                /* or: 1px solid #d0d0d0; */
+  padding-top: 4px;            /* little breathing room under tabs */
+  background: transparent;
 }
+
+/* Tabs (top) — rounded TOP corners via 9-slice; bottom edge flat */
+QTabBar::tab {
+  border: 10px 10px 10px 10px solid transparent;
+  border-image: url(:/ui/pixel_tab_normal.png) 20 20 20 20 repeat;
+  background: transparent;
+  padding: 4px 4px 4px 4px;
+  border-radius: 0;
+  color: #1a1a1a;
+  margin-bottom: 0;
+}
+
+/* Hover (when not selected) */
+QTabBar::tab:hover:!selected {
+  border-image: url(:/ui/pixel_tab_hover.png) 20 20 20 20 repeat;
+}
+
+/* Selected tab */
 QTabBar::tab:selected {
-  background: #f5dcf4;
-  border: 1px solid #107865;
+  border-image: url(:/ui/pixel_tab_selected.png) 20 20 20 20 repeat;
+  margin-bottom: -1px;
+  z-index: 2;
+}
+
+/* Disabled tab */
+QTabBar::tab:disabled {
+  border-image: url(:/ui/pixel_tab_disabled.png) 20 20 20 20 repeat;
+  color: #9a9a9a;
 }
 
 /* Cards */
