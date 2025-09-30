@@ -41,34 +41,6 @@ QTabBar::tab:selected {
   padding: 12px;
 }
 
-/* Buttons to match tab look & feel */
-QPushButton {
-  background: #ffffff;                /* like normal tab */
-  border: 1px solid #d0d0d0;          /* like normal tab border */
-  border-radius: 10px;
-  padding: 8px 20px;
-  color: #1a1a1a;
-}
-
-
-
-QPushButton:pressed {
-  background: #107865;                /* solid accent when pressed */
-  color: #ffffff;                     /* readable text on dark */
-  border: 1px solid #107865;
-}
-
-QPushButton:default {
-  /* default action button subtle accent ring */
-  border: 1px solid #107865;
-}
-
-QPushButton:disabled {
-  background: #f0f0f0;
-  color: #9a9a9a;
-  border: 1px solid #e0e0e0;
-}
-
 /* Inputs */
 QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {
   background: #ffffff;
@@ -252,26 +224,29 @@ QLabel[choreMeta="true"] {
   padding: 0;
 }
 
-QWidget#ChoreCard QPushButton:hover {
-  border-image: url(:/ui/pixel_button_hover.png) 20 20 20 20 repeat;
-}
-
-QWidget#ChoreCard QPushButton:pressed {
-  border-image: url(:/ui/pixel_button_pressed.png) 20 20 20 20 repeat;
-}
-
+/* ==== QPushButtons with pixel 9-slice (DARK) ==== */
 /* Buttons inside ChoreCard: force pixel 9-slice */
-QWidget#ChoreCard QPushButton {
-  /* MUST set border width for border-image to render */
+QPushButton {
   border: 10px solid transparent;
-
-  /* your @2x PNG that worked before */
   border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
-
-  /* override globals that can interfere */
   border-radius: 0;
   background: transparent;
-
   color: #1a1a1a;
   padding: 6px 12px;
+}
+
+QPushButton:hover {
+  border-image: url(:/ui/pixel_button_hover.png) 20 20 20 20 repeat;
+  color: #1a1a1a;
+}
+
+QPushButton:pressed {
+  border-image: url(:/ui/pixel_button_pressed.png) 20 20 20 20 repeat;
+  color: #1a1a1a;
+}
+
+/* Disabled: keep 9-slice, just dim text and use disabled asset */
+QPushButton:disabled {
+  border-image: url(:/ui/pixel_button_disabled.png) 20 20 20 20 repeat;
+  color: #7e8185;
 }
