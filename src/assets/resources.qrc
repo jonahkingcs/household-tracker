@@ -21,6 +21,8 @@
     <file alias="pixel_button_dark_normal@2x.png">ui/pixel_button_dark_normal@2x.png</file>
     <file alias="pixel_button_hover.png">ui/pixel_button_hover.png</file>
     <file alias="pixel_button_hover@2x.png">ui/pixel_button_hover@2x.png</file>
+    <file alias="pixel_button_dark_hover.png">ui/pixel_button_dark_hover.png</file>
+    <file alias="pixel_button_dark_hover@2x.png">ui/pixel_button_dark_hover@2x.png</file>
     <file alias="pixel_button_pressed.png">ui/pixel_button_pressed.png</file>
     <file alias="pixel_button_pressed@2x.png">ui/pixel_button_pressed@2x.png</file>
   </qresource>
