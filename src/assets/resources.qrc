@@ -27,5 +27,7 @@
     <file alias="pixel_button_pressed@2x.png">ui/pixel_button_pressed@2x.png</file>
     <file alias="pixel_button_dark_pressed.png">ui/pixel_button_dark_pressed.png</file>
     <file alias="pixel_button_dark_pressed@2x.png">ui/pixel_button_dark_pressed@2x.png</file>
+    <file alias="pixel_button_dark_disabled.png">ui/pixel_button_dark_disabled.png</file>
+    <file alias="pixel_button_dark_disabled@2x.png">ui/pixel_button_dark_disabled@2x.png</file>
   </qresource>
 </RCC>
