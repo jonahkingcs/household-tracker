@@ -205,10 +205,11 @@ QLabel[choreMeta="true"] {
 
 QWidget#ChoreCard QPushButton:hover {
   border-image: url(:/ui/pixel_button_dark_hover.png) 20 20 20 20 repeat;
+  color: #e6e6e6;
 }
 
 QWidget#ChoreCard QPushButton:pressed {
-  border-image: url(:/ui/pixel_button_pressed.png) 20 20 20 20 repeat; /* swap to dark asset later */
+  border-image: url(:/ui/pixel_button_dark_pressed.png) 20 20 20 20 repeat;
   color: #e6e6e6;
 }
 
