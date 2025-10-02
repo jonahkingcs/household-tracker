@@ -47,7 +47,6 @@ QTabBar::tab:hover:!selected {
 /* Selected tab */
 QTabBar::tab:selected {
   border-image: url(:/ui/pixel_tab_selected.png) 20 20 20 20 repeat;
-  margin-bottom: -1px;
 }
 
 /* Disabled tab */
