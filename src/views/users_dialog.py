@@ -80,7 +80,7 @@ class UsersDialog(QDialog):
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.horizontalHeader().setHighlightSections(False)
 
-        # Row selection + no inline editing of names (you already set NoEditTriggers)
+        # Row selection + no inline editing of names
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
 

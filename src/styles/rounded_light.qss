@@ -31,10 +31,12 @@ QTabBar::tab {
   border: 10px 10px 10px 10px solid transparent;
   border-image: url(:/ui/pixel_tab_normal.png) 20 20 20 20 repeat;
   background: transparent;
-  padding: 4px 4px 4px 4px;
+  padding: 2px 8px 2px 8px;
   border-radius: 0;
   color: #1a1a1a;
   margin-bottom: 0;
+  margin-right: 2px;
+  margin-left: 2px;
 }
 
 /* Hover (when not selected) */
@@ -46,7 +48,6 @@ QTabBar::tab:hover:!selected {
 QTabBar::tab:selected {
   border-image: url(:/ui/pixel_tab_selected.png) 20 20 20 20 repeat;
   margin-bottom: -1px;
-  z-index: 2;
 }
 
 /* Disabled tab */
