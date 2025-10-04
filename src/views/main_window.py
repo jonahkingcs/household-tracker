@@ -20,6 +20,7 @@ from PySide6.QtGui import QAction, QActionGroup, QKeySequence
 from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
 from src.views.chore_board import ChoreBoard
+from src.views.item_board import ItemBoard
 from src.views.users_dialog import UsersDialog
 
 
@@ -96,8 +97,8 @@ class MainWindow(QMainWindow):
 
         # ----- Central content: tab widget -----
         tabs = QTabWidget()
-        tabs.addTab(ChoreBoard(self), "Chores") # real board
-        tabs.addTab(self._make_placeholder("Purchases board coming soon…"), "Purchases")
+        tabs.addTab(ChoreBoard(self), "Chores")
+        tabs.addTab(ItemBoard(self), "Purchases")
         tabs.addTab(self._make_placeholder("History timeline coming soon…"), "History")
         tabs.addTab(self._make_placeholder("Analytics coming soon…"), "Analytics")
 
