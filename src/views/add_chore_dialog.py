@@ -82,6 +82,7 @@ class AddChoreDialog(QDialog):
         box.accepted.connect(self._on_save)
         box.rejected.connect(self.reject)
         v.addWidget(box)
+        
 
     # ---------- Slots ----------
 

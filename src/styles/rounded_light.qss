@@ -231,6 +231,19 @@ QWidget#ChoreCard {
   padding: 12px;
 }
 
+QWidget#ItemCard {
+  /* reserve space for the 10px slices */
+  border: 10px solid transparent;
+
+  /* paint the nine-slice; slices = top right bottom left */
+  border-image: url(:/ui/pixel_card_normal.png) 20 20 20 20 repeat;
+
+  /* the center is painted by border-image; keep bg transparent */
+  background: transparent;
+
+  /* inner spacing for content (added inside the border) */
+  padding: 12px;
+}
 
 /* Slightly softer text for the description line */
 QLabel[choreDesc="true"] {
@@ -271,4 +284,67 @@ QPushButton:pressed {
 QPushButton:disabled {
   border-image: url(:/ui/pixel_button_disabled.png) 20 20 20 20 repeat;
   color: #7e8185;
+}
+
+/* Dialog buttons sometimes behave differently: force all states */
+QDialogButtonBox QPushButton,
+QDialogButtonBox QPushButton:default,
+QDialogButtonBox QPushButton[autoDefault="true"],
+QDialogButtonBox QPushButton:flat,
+QDialogButtonBox QPushButton:focus {
+  border: 10px solid transparent;
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+  background: transparent;
+  border-radius: 0;
+  color: #1a1a1a;
+  padding: 6px 12px;
+}
+QDialogButtonBox QPushButton:hover {
+  border-image: url(:/ui/pixel_button_hover.png) 20 20 20 20 repeat;
+}
+QDialogButtonBox QPushButton:pressed {
+  border-image: url(:/ui/pixel_button_pressed.png) 20 20 20 20 repeat;
+}
+QDialogButtonBox QPushButton:disabled {
+  border-image: url(:/ui/pixel_button_disabled.png) 20 20 20 20 repeat;
+}
+
+/* Single-line input (QLineEdit) */
+QLineEdit {
+  border: 10px solid transparent;
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+  background: transparent;        /* center is painted by the 9-slice */
+  border-radius: 0;
+  padding: 0px 0px;              /* inner text padding */
+  color: #1a1a1a;
+}
+QLineEdit:hover {
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+}
+QLineEdit:focus {
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+}
+QLineEdit:disabled {
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+  color: #7e8185;
+}
+
+/* Multi-line input (QTextEdit) */
+QTextEdit {
+  border: 10px solid transparent;
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+  background: transparent;
+  border-radius: 0;
+  padding: 0px 0px;     /* padding around the viewport */
+  color: #1a1a1a;
+}
+QTextEdit:hover  { border-image: url(:/ui/pixel_button_normal.png)  20 20 20 20 repeat; }
+QTextEdit:focus  { border-image: url(:/ui/pixel_button_normal.png)  20 20 20 20 repeat; }
+QTextEdit:disabled {
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+  color: #7e8185;
+}
+/* Make the scrollable content transparent so the center of the 9-slice is visible */
+QTextEdit > QWidget#qt_scrollarea_viewport {
+  background: transparent;
 }
