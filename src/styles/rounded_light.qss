@@ -231,6 +231,7 @@ QWidget#ChoreCard {
   padding: 12px;
 }
 
+/* ==== Item card with pixel 9-slice ==== */
 QWidget#ItemCard {
   /* reserve space for the 10px slices */
   border: 10px solid transparent;
