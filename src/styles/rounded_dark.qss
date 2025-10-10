@@ -179,6 +179,21 @@ QWidget#ChoreCard {
   padding: 12px;
 }
 
+/* ==== Chore cards with pixel 9-slice (DARK) ==== */
+QWidget#ItemCard {
+  /* reserve space for the 10px slices */
+  border: 10px solid transparent;
+
+  /* paint the nine-slice; slices = top right bottom left */
+  border-image: url(:/ui/pixel_card_dark.png) 20 20 20 20 repeat;
+
+  /* the center is painted by border-image; keep bg transparent */
+  background: transparent;
+
+  /* inner spacing for content (added inside the border) */
+  padding: 12px;
+}
+
 /* Description / meta text tones */
 QLabel[choreDesc="true"] {
   color: #a6a6a6;
@@ -256,4 +271,41 @@ QTextEdit:disabled {
 /* Make the scrollable content transparent so the center of the 9-slice is visible */
 QTextEdit > QWidget#qt_scrollarea_viewport {
   background: transparent;
+}
+
+/* Non-editable combo */
+QComboBox {
+  border: 10px solid transparent;
+  border-image: url(:/ui/pixel_button_dark_normal.png) 20 20 20 20 repeat;
+  background: transparent;
+  border-radius: 0;
+  padding: 0px 28px 0px 1px;  /* right padding for the arrow */
+  color: #fdfdfdff;
+}
+QComboBox:hover { border-image: url(:/ui/pixel_button_dark_normal.png) 20 20 20 20 repeat; }
+QComboBox:focus { border-image: url(:/ui/pixel_button_dark_normal.png) 20 20 20 20 repeat; }
+QComboBox:disabled {
+  border-image: url(:/ui/pixel_button_dark_normal.png) 20 20 20 20 repeat;
+  color: #fbfbfbff;
+}
+
+/* Keep custom flat arrow */
+QComboBox::drop-down {
+  background: transparent;
+  border: none;
+  width: 20px;
+  subcontrol-origin: padding;
+  subcontrol-position: center right;
+  margin-right: 6px;
+}
+QComboBox::down-arrow {
+  width: 12px; height: 12px;
+  image: url(:/icons/arrow_down.png);
+}
+
+/* Editable combo */
+QComboBox[editable="true"] QLineEdit {
+  border: none;
+  background: transparent;
+  padding: 0;                 /* rely on outer QComboBox padding */
 }
