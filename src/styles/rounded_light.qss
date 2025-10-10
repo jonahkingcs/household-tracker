@@ -386,3 +386,32 @@ QComboBox[editable="true"] QLineEdit {
   background: transparent;
   padding: 0;                 /* rely on outer QComboBox padding */
 }
+
+/* Spin boxes with pixel frame */
+QAbstractSpinBox {
+  border: 10px solid transparent;
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+  background: transparent;
+  border-radius: 0;
+  padding: 0px 28px 0px 0px;     /* right space for arrows */
+  color: #1a1a1a;
+}
+QAbstractSpinBox:hover { border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat; }
+QAbstractSpinBox:focus { border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat; }
+QAbstractSpinBox:disabled {
+  border-image: url(:/ui/pixel_button_normal.png) 20 20 20 20 repeat;
+  color: #7e8185;
+}
+
+/* Keep the custom flat arrow buttons */
+QSpinBox::up-button, QSpinBox::down-button {
+  background: transparent; border: none; width: 20px; height: 10px;
+  subcontrol-origin: padding;
+}
+QSpinBox::up-button   { subcontrol-position: top right;    margin-right: 0px; margin-top: 0px; }
+QSpinBox::down-button { subcontrol-position: bottom right; margin-right: 0px; margin-bottom: 0px; }
+QSpinBox::up-button:hover, QSpinBox::down-button:hover,
+QSpinBox::up-button:pressed, QSpinBox::down-button:pressed { background: transparent; border: none; }
+QSpinBox::up-arrow   { width: 30px; height: 20px; image: url(:/icons/arrow_up_spn); }
+QSpinBox::down-arrow { width: 30px; height: 20px; image: url(:/icons/arrow_down_spn); }
+QSpinBox::up-arrow:disabled, QSpinBox::down-arrow:disabled { image: none; }
