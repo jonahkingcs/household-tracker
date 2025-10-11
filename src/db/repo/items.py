@@ -197,3 +197,71 @@ def log_purchase(
     session.commit()
     session.refresh(rec)
     return rec
+
+def list_purchases(
+    session: Session,
+    *,
+    item_id: str | None = None,
+    user_id: str | None = None,
+    date_from: datetime | None = None,
+    date_to: datetime | None = None,
+    order_desc: bool = True,
+) -> list[PurchaseRecord]:
+    """
+    Query helper: return purchase records with optional filters.
+
+    Parameters:
+        session     : Active SQLAlchemy Session (caller owns lifecycle).
+        item_id     : If provided, only include purchases for this item.
+        user_id     : If provided, only include purchases made by this user.
+        date_from   : Inclusive lower bound on PurchaseRecord.date_purchased.
+        date_to     : Exclusive upper bound on PurchaseRecord.date_purchased.
+        order_desc  : If True (default), order newest → oldest; else oldest → newest.
+
+    Returns:
+        List[PurchaseRecord] with .item and .user eagerly loaded to avoid N+1s.
+
+    Notes:
+        - Uses joinedload() so rec.item / rec.user are available without extra queries.
+        - date_to is exclusive to make open-ended ranges easier (e.g., [from, to)).
+    """
+    # Base SELECT from the PurchaseRecord table; eager-load related Item and User.
+    # joinedload() attaches the related rows to each PurchaseRecord so that
+    # accessing rec.item or rec.user does not trigger additional queries.
+    stmt = (
+        select(PurchaseRecord)
+        .options(
+            joinedload(PurchaseRecord.item),
+            joinedload(PurchaseRecord.user),
+        )
+    )
+
+    # --- Optional filters ----------------------------------------------------
+
+    # Filter by a specific item (e.g., only "Toilet Paper" purchases).
+    if item_id:
+        stmt = stmt.where(PurchaseRecord.item_id == item_id)
+
+    # Filter by buyer (e.g., only purchases made by "Angel").
+    if user_id:
+        stmt = stmt.where(PurchaseRecord.user_id == user_id)
+
+    # Date range: inclusive lower bound. Example: last 30 days.
+    if date_from:
+        stmt = stmt.where(PurchaseRecord.date_purchased >= date_from)
+
+    # Date range: exclusive upper bound. Example: everything before "tomorrow".
+    if date_to:
+        stmt = stmt.where(PurchaseRecord.date_purchased < date_to)
+
+    # --- Ordering ------------------------------------------------------------
+
+    # Sort by purchase timestamp, newest-first by default.
+    if order_desc:
+        stmt = stmt.order_by(PurchaseRecord.date_purchased.desc())
+    else:
+        stmt = stmt.order_by(PurchaseRecord.date_purchased.asc())
+
+    # Materialize the query. `scalars()` yields PurchaseRecord entities;
+    # list(...) collects them so the caller gets a plain Python list.
+    return list(session.scalars(stmt))
