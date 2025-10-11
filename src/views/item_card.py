@@ -68,28 +68,38 @@ class ItemCard(QWidget):
         # ---- Layout scaffolding ----
         v = QVBoxLayout(self)
         v.setContentsMargins(12, 12, 12, 12)
-        v.setSpacing(0) # no default gaps; we add our own
+        v.setSpacing(0) # no default gaps
 
-        # Title
+        # Title + Description grouped with zero spacing
+        hdr = QVBoxLayout()
+        hdr.setContentsMargins(0, 0, 0, 0)
+        hdr.setSpacing(0)
+
         title = QLabel(name)
-        title.setStyleSheet("font-weight: 600; font-size: 14pt;")
+        title.setMargin(0)
         title.setContentsMargins(0, 0, 0, 0)
-        v.addWidget(title)
+        title.setIndent(0)
+        title.setStyleSheet("font-weight: 600; font-size: 14pt; margin: 0; padding: 0;")
+        hdr.addWidget(title)
 
         # Description (optional, soft tone via QSS; wraps if long)
         self._desc = QLabel(description or "")
         self._desc.setWordWrap(True)
-        self._desc.setProperty("itemDesc", True)
+        self._desc.setProperty("choreDesc", True)      # was: "itemDesc"
         self._desc.setVisible(bool((description or "").strip()))
+        self._desc.setMargin(0)
         self._desc.setContentsMargins(0, 0, 0, 0)
-        v.addWidget(self._desc)
+        self._desc.setIndent(0)
+        hdr.addWidget(self._desc)
 
-        # Tiny spacer before the meta line to keep things readable
+        v.addLayout(hdr)
+
+        # Small gap before meta line
         v.addSpacing(6)
 
         # Meta line: restock due + next buyer (soft tone via QSS)
         self._meta = QLabel(f"Restock: {due_text}  •  Next buyer: {buyer_text}")
-        self._meta.setProperty("itemMeta", True)
+        self._meta.setProperty("choreMeta", True)      # was: "itemMeta"
         self._meta.setContentsMargins(0, 0, 0, 0)
         v.addWidget(self._meta)
 
