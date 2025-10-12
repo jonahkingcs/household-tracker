@@ -107,6 +107,8 @@ class ChoreCompletion(Base):
     backdated: Mapped[int] = mapped_column(
         Integer, default=0
         ) # 1 if completion was logged after the fact
+    chore = relationship("Chore")   # ORM navigation to parent chore; enables joinedload()
+    user  = relationship("User")    # ORM navigation to actor; may be None if user was deleted
 
 # ---------------------------
 # Purchases: Items & Records
@@ -183,3 +185,6 @@ class PurchaseRecord(Base):
     backdated: Mapped[int] = mapped_column(
         Integer, default=0
     )  # 1 if logged after the fact
+
+    item = relationship("Item")     # ORM navigation to purchased item; enables joinedload()
+    user = relationship("User")     # ORM navigation to buyer; may be None if user was deleted
