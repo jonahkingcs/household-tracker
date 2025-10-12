@@ -29,32 +29,61 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
 
 ## Features Implemented So Far
 
-- **Core skeleton app**  
-  - Main window with tabs (Chores, Purchases, History, Analytics)  
-  - Light & dark QSS themes with rounded modern design  
+- **Core app & theming**
+  - Main window with tabs: **Chores**, **Purchases**, **History**, (Analytics placeholder)
+  - **Light/Dark** QSS themes with pixel 9-slice cards/buttons; theme persists via QSettings
+  - Quick toggle (Shift+L) and menu: View → Appearance
 
-- **Database foundation**  
-  - SQLite + SQLAlchemy models for Users, Chores, Purchases, and completions  
-  - Local data storage in `~/Library/Application Support/HouseholdTracker/`  
+- **Database & repos**
+  - SQLite + SQLAlchemy 2.0 models: `User`, `Chore`, `ChoreCompletion`, `Item`, `PurchaseRecord`
+  - Clean repo layer (`src/db/repo/*`) with eager-loading to avoid N+1 queries
+  - UUID primary keys; money stored in **cents** for correctness
 
-- **User management (new)**  
-  - Added **Users dialog** with table view  
-  - Integrated with DB (list users, toggle active, add new users, delete users)  
-  - Styled table: green headers, zebra rows, consistent selection colors
+- **Users management**
+  - **Users dialog**: list, add, toggle active, hard delete (with safe reassignment/nulling)
+  - Deactivation removes users from rotations; history retained
 
-- **Dev utilities**  
-  - Seeding scripts for test users, chores, and purchases  
-  - Repo structure with clean separation (`src/db/repo`, `src/views`, `src/services`)  
+- **Chores**
+  - **Chore board**: scrollable 2-column grid of cards (title, description, due, next assignee)
+  - Add/Edit dialogs; **Complete Chore** dialog (duration + comments)
+  - Global alphabetical **rotation** of active users; due dates bump via `bump_due`
+  - Humanized due text (“Today / Tomorrow / in 3d / Overdue by 2d”)
+
+- **Purchases**
+  - **Purchases board**: 2-column cards (restock due, next buyer)
+  - Add/Edit item dialogs; **Log Purchase** dialog (qty, price, comments)
+  - Rotation advances on purchase; next restock date bumped
+  - **Purchases History** tab: table (Item • Buyer • Qty • Total • Date • Comments) with filters  
+    (Item, Buyer, Last 30/90 days) and default **Date desc** sorting
+
+- **Dev utilities**
+  - Simple seed scripts under `src/dev` for adding users/items/chores/purchases
+  - Paths centralized in `src/services/paths.py` (`~/Library/Application Support/HouseholdTracker`)
 
 ---
 
 ## Upcoming Features
 
-- Chores board with scrollable widgets and logging  
-- Purchases board with logging and analytics  
-- Unified history timeline with filtering/search  
-- Analytics dashboards (pie charts + leaderboards)  
-- Gamification layer (points, streaks, rewards)  
+- **History enhancements**
+  - Chores history (toggle alongside Purchases)
+  - CSV export of filtered history
+
+- **Analytics (MVP)**
+  - Total spend per user & per item
+  - Chore time leaderboards / completion streaks
+  - Simple charts (matplotlib / pyqtgraph / Qt Charts)
+
+- **Rotations & data model**
+  - Per-entity rotations (item/chore-specific order vs global)
+  - Optional soft-delete & name snapshots for cleaner history
+
+- **Settings & tooling**
+  - App Settings panel (currency, date/time format)
+  - Data export/import (JSON/CSV)
+  - Alembic migrations as the schema stabilizes
+
+- **Packaging**
+  - Polished macOS `.app` bundle (codesign/notarize) with PyInstaller/Briefcase
 
 ---
 
@@ -63,7 +92,31 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
   <img src="docs/screenshot_chore_board.png" width="600" alt="Main Window screenshot">
 </p>
 <p align="center">
+  <img src="docs/screenshot_add_chore.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_complete_chore.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_edit_chore.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_purchase_board.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_add_item.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_log_purchase.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_edit_item.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
   <img src="docs/screenshot_user_settings.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
+  <img src="docs/screenshot_add_user.png" width="600" alt="Main Window screenshot">
 </p>
 
 ---
@@ -112,7 +165,8 @@ HouseholdTracker/
 │   ├── db/                 # SQLAlchemy models & session setup
 │   ├── services/           # Paths, helpers, business logic
 │   └── styles/             # QSS stylesheets (light/dark themes)
-├── dev/                    # Dev-only scripts (test seeds, etc.)
+│   └── assets/             # Custom icons and ui
+│   └── dev/                # Dev-only scripts (test seeds, etc.)
 ├── docs/                   # Screenshots, diagrams
 └── requirements.txt
 
