@@ -113,6 +113,9 @@ The app runs **fully offline**, stores data locally, and provides **analytics da
   <img src="docs/screenshot_edit_item.png" width="600" alt="Main Window screenshot">
 </p>
 <p align="center">
+  <img src="docs/screenshot_purchase_history.png" width="600" alt="Main Window screenshot">
+</p>
+<p align="center">
   <img src="docs/screenshot_user_settings.png" width="600" alt="Main Window screenshot">
 </p>
 <p align="center">

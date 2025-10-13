@@ -58,7 +58,7 @@ QTabBar::tab:disabled {
 /* Cards */
 .QCard {
   background: #ffffff;
-  border: 1px solid #0e9c82;
+  border: 1px solid #cfe8cf;
   border-radius: 14px;
   padding: 12px;
 }
@@ -156,44 +156,7 @@ QScrollBar::handle:horizontal {
   min-width: 20px;
 }
 
-/* Table: body only (header owns the top), no right border under scrollbar */
-QTableView {
-  background: #f3faf8;
-  border: none;
-  gridline-color: #e5e7eb;
-  alternate-background-color: #e6f5f0;
-}
 
-/* Force selected text to stay readable on green */
-QTableView::item:selected {
-  background: #e1e1e1;
-  color: #1a1a1a;
-}
-
-/* Cell padding */
-QTableView::item {
-  padding: 8px 10px;
-}
-
-/* Header */
-QHeaderView::section {
-  background-color: #107865;
-  color: #ffffff;
-  padding: 8px 10px;
-  border: none;
-  border-right: 1px solid #0d6b57;
-  border-bottom: 1px solid #d0d0d0;   /* seam that meets the viewport border */
-}
-QHeaderView::section:first { border-top-left-radius: 8px; }
-QHeaderView::section:last  { border-top-right-radius: 8px; }
-
-/* Top-left header corner tile */
-QTableCornerButton::section {
-  background-color: #107865;
-  border: none;
-  border-right: 1px solid #0d6b57;
-  border-bottom: 1px solid #d0d0d0;   /* same seam as header sections */
-}
 
 /* Bottom-right corner where scrollbars meet: continue the bottom border only */
 QAbstractScrollArea::corner {
@@ -211,10 +174,6 @@ QScrollBar::sub-line:horizontal { height: 0; width: 0; background: none; border:
 QScrollBar::handle:vertical,
 QScrollBar::handle:horizontal { background: #c8c8c8; border-radius: 6px; }
 
-/* Remove the dotted focus rect on items for a cleaner look */
-QTableView::item:focus {
-  outline: none;
-}
 
 /* ==== Chore cards with pixel 9-slice ==== */
 QWidget#ChoreCard {
@@ -415,3 +374,42 @@ QSpinBox::up-button:pressed, QSpinBox::down-button:pressed { background: transpa
 QSpinBox::up-arrow   { width: 30px; height: 20px; image: url(:/icons/arrow_up_spn); }
 QSpinBox::down-arrow { width: 30px; height: 20px; image: url(:/icons/arrow_down_spn); }
 QSpinBox::up-arrow:disabled, QSpinBox::down-arrow:disabled { image: none; }
+
+/* Paint on own custom grid; hide Qt's built-in */
+QTableView, QTableWidget { gridline-color: transparent; }
+
+/* Header sections use the same 2px separators */
+QTableView QHeaderView::section,
+QTableWidget QHeaderView::section {
+  background: #ffffff;
+  color: #1a1a1a;
+  padding: 8px 10px;
+  border: none;
+  border-right: 2px solid #cfe8cf;
+  border-bottom: 2px solid #cfe8cf;
+}
+
+QTableCornerButton::section {
+  background: #ffffff;
+  border: none;
+  border-right: 2px solid #cfe8cf;
+  border-bottom: 2px solid #cfe8cf;
+}
+
+QAbstractScrollArea::corner { background: transparent; border: none; }
+
+
+QHeaderView::section {
+  border-right: 1px solid #cfe8cf;   /* internal column separators */
+}
+
+QHeaderView::section:last {
+  border-right: none;                 /* avoid outer-right duplicate */
+}
+
+/* Vertical row header (left numbers) with no built-in bottoms */
+QTableView QHeaderView::section:vertical {
+  border-bottom: none;
+  /* keep the separator to the data area (right side) in the grid color */
+  border-right: 2px solid #cfe8cf;
+}

@@ -37,5 +37,9 @@
     <file alias="pixel_button_disabled@2x.png">ui/pixel_button_disabled@2x.png</file>
     <file alias="pixel_button_dark_disabled.png">ui/pixel_button_dark_disabled.png</file>
     <file alias="pixel_button_dark_disabled@2x.png">ui/pixel_button_dark_disabled@2x.png</file>
+    <file alias="pixel_grid_corner_tl.png">ui/pixel_grid_corner_tl.png</file>
+    <file alias="pixel_grid_corner_tr.png">ui/pixel_grid_corner_tr.png</file>
+    <file alias="pixel_grid_corner_bl.png">ui/pixel_grid_corner_bl.png</file>
+    <file alias="pixel_grid_corner_br.png">ui/pixel_grid_corner_br.png</file>
   </qresource>
 </RCC>
