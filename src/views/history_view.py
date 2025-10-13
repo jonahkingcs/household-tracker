@@ -1,13 +1,29 @@
+"""
+history_view.py — Read-only Purchases History with filters + custom table chrome.
+
+What this file provides
+-----------------------
+- A QTableView backed by a minimal QAbstractTableModel to list purchase history.
+- Three filters (Item, Buyer, Date range) with a Refresh/Clear UX.
+- Custom “pixel” chrome:
+    * Thick cell grid (ThickGridDelegate)
+    * Rounded pixel border overlay (PixelTableOverlay)
+    * Extra separators under the vertical (row-number) header
+"""
+
 from __future__ import annotations
 
 import datetime as dt
 
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt, QTimer
 from PySide6.QtWidgets import (
     QComboBox,
+    QFrame,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
     QPushButton,
+    QSizePolicy,
     QTableView,
     QVBoxLayout,
     QWidget,
@@ -17,7 +33,11 @@ from src.db.models import PurchaseRecord
 from src.db.repo.items import list_items, list_purchases
 from src.db.repo.users import list_users
 from src.db.session import SessionLocal
+from src.views.pixel_table_overlay import PixelTableOverlay
+from src.views.thick_grid_delegate import ThickGridDelegate
+from src.views.vertical_header_painter import VerticalHeaderPainter
 
+# ----- Small helpers ----------------------------------------------------------
 
 def _fmt_money_pounds(cents: int | None) -> str:
     """
@@ -27,10 +47,12 @@ def _fmt_money_pounds(cents: int | None) -> str:
         cents: Amount in minor units (pennies). May be None.
 
     Returns:
-        A human-readable currency string (e.g., '£4.50').
+        Human-readable currency (e.g., '£4.50').
     """
     return f"£{(cents or 0)/100:.2f}"
 
+
+# ----- Table model ------------------------------------------------------------
 
 class PurchasesTableModel(QAbstractTableModel):
     """
@@ -55,7 +77,7 @@ class PurchasesTableModel(QAbstractTableModel):
     # ---- Qt model API ----
 
     def rowCount(self, parent=QModelIndex()) -> int:
-        """Number of records shown in the table."""
+        """Number of records shown in the table (no children, so ignore parent)."""
         return 0 if parent.isValid() else len(self._rows)
 
     def columnCount(self, parent=QModelIndex()) -> int:
@@ -63,13 +85,17 @@ class PurchasesTableModel(QAbstractTableModel):
         return 0 if parent.isValid() else len(self.HEADERS)
 
     def headerData(self, section, orientation, role=Qt.DisplayRole):
-        """Return user-facing column headers for the horizontal header."""
+        """
+        Provide headers for the table.
+
+        - Horizontal header: named columns from HEADERS
+        - Vertical header: 1-based row numbers
+        """
         if role != Qt.DisplayRole:
             return None
         if orientation == Qt.Horizontal:
             return self.HEADERS[section]
-        # For vertical headers (row numbers), show 1-based indices.
-        return section + 1
+        return section + 1  # vertical header shows 1,2,3,...
 
     def data(self, index: QModelIndex, role=Qt.DisplayRole):
         """
@@ -103,7 +129,7 @@ class PurchasesTableModel(QAbstractTableModel):
                 return rec.comments or ""
         return None
 
-    # ---- helpers ----
+    # ---- dataset swap helper ----
 
     def set_rows(self, rows: list[PurchaseRecord]):
         """
@@ -116,6 +142,8 @@ class PurchasesTableModel(QAbstractTableModel):
         self.endResetModel()
 
 
+# ----- History view (widget) --------------------------------------------------
+
 class HistoryView(QWidget):
     """
     Read-only Purchases History with filters.
@@ -125,6 +153,7 @@ class HistoryView(QWidget):
     - For now, only Purchases are shown.
     - Filters: by Item, Buyer, and Date range (All / Last 30 / Last 90 days).
     """
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -150,15 +179,44 @@ class HistoryView(QWidget):
 
         # --- Table view -------------------------------------------------------
         self.table = QTableView()
-        self.table.setAlternatingRowColors(True)                # uses QSS alt row color
+        self.table.setFrameShape(QFrame.NoFrame)            # remove inner frame
+        self.table.setAlternatingRowColors(True)            # use QSS alt row color
         self.table.setSelectionBehavior(QTableView.SelectRows)
         self.table.setEditTriggers(QTableView.NoEditTriggers)   # read-only
-        self.table.setSortingEnabled(True)                      # enable header sorting
+        self.table.setSortingEnabled(True)
+        self.table.setShowGrid(False)                       # we draw our own grid
 
+        # The model
         self.model = PurchasesTableModel()
         self.table.setModel(self.model)
-        # Default sort: Date (column 4) descending (newest first)
-        self.table.sortByColumn(4, Qt.DescendingOrder)  # Date desc
+
+        # Make the view expand fully with the window
+        self.table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        # Column sizing strategy:
+        # - Item..Date (0..4) autosize to content
+        # - Comments (5) is interactive and will be stretched after data loads
+        h = self.table.horizontalHeader()
+        h.setSectionResizeMode(QHeaderView.Interactive)          # default
+        for c in range(5):                                       # columns 0..4
+            h.setSectionResizeMode(c, QHeaderView.ResizeToContents)
+
+        # prep Comments column; final stretch is applied after data loads
+        h.setSectionResizeMode(5, QHeaderView.Interactive)       # temporary
+        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+        # Default sort: Date desc (newest first)
+        self.table.sortByColumn(4, Qt.DescendingOrder)
+
+        # Custom chrome:
+        # - Rounded pixel outer border overlay (drawn over headers + body)
+        # - Thick per-cell grid lines (skip outermost edges)
+        self._table_overlay = PixelTableOverlay(self.table, parent=self)
+        self.table.setItemDelegate(ThickGridDelegate())
+        assert isinstance(self.table.itemDelegate(), ThickGridDelegate)
+
+        # Ensure the overlay snaps to the table after the first layout pass
+        QTimer.singleShot(0, self._table_overlay._sync_to_target)
 
         # --- Layout root ------------------------------------------------------
         root = QVBoxLayout(self)
@@ -183,9 +241,10 @@ class HistoryView(QWidget):
         Populate the filter combos with choices from the database.
 
         - Items: all items (ordered by name via repo), prefixed with "All items".
-        - Buyers: active users only (mirrors your dialogs), prefixed with "All buyers".
+        - Buyers: active users only (mirrors dialogs), prefixed with "All buyers".
         - Range: static choices.
         """
+        # Items
         self.item_filter.blockSignals(True)
         self.item_filter.clear()
         self.item_filter.addItem("All items", userData=None)
@@ -194,7 +253,7 @@ class HistoryView(QWidget):
                 self.item_filter.addItem(it.name, userData=it.id)
         self.item_filter.blockSignals(False)
 
-        # Buyers (active first; mirrors your Add/Edit/Log dialogs)
+        # Buyers (active only; consistent with Add/Edit/Log dialogs)
         self.buyer_filter.blockSignals(True)
         self.buyer_filter.clear()
         self.buyer_filter.addItem("All buyers", userData=None)
@@ -204,7 +263,7 @@ class HistoryView(QWidget):
                     self.buyer_filter.addItem(u.name, userData=u.id)
         self.buyer_filter.blockSignals(False)
 
-        # Ranges
+        # Date ranges
         self.range_filter.blockSignals(True)
         self.range_filter.clear()
         self.range_filter.addItems(["All time", "Last 30 days", "Last 90 days"])
@@ -229,9 +288,7 @@ class HistoryView(QWidget):
         return None, None
 
     def clear_filters(self):
-        """
-        Reset all filters to their 'All' state and refresh the table.
-        """
+        """Reset all filters to their 'All' state and refresh the table."""
         self.item_filter.setCurrentIndex(0)
         self.buyer_filter.setCurrentIndex(0)
         self.range_filter.setCurrentIndex(0)
@@ -242,8 +299,8 @@ class HistoryView(QWidget):
         Query the repository with current filters and update the table model.
 
         Uses a short-lived SessionLocal for each refresh. After resetting the
-        model, we re-apply the default sort (Date desc) as Qt clears sorting
-        on model resets.
+        model, we re-apply the default sort (Date desc) because Qt clears the
+        sort when the model is reset.
         """
         item_id = self.item_filter.currentData()
         user_id = self.buyer_filter.currentData()
@@ -262,5 +319,44 @@ class HistoryView(QWidget):
 
         # Populate the model and keep the table sorted newest-first.
         self.model.set_rows(rows)
+        self.model.set_rows(rows)
+
+        # Defer column sizing until after the view has applied the new model & layout
+        QTimer.singleShot(0, self._fit_table_to_content)
+
+        # Paint extra horizontal separators under row numbers (skip very bottom)
+        self._vhp = VerticalHeaderPainter(self.table)
+
+        # Keep columns fitted when headers resize/scrollbar range changes
+        self.table.horizontalHeader().sectionResized.connect(
+            lambda *_: self._fit_table_to_content()
+            )
+        self.table.verticalScrollBar().rangeChanged.connect(lambda *_: self._fit_table_to_content())
+
         # keep date desc after reset
         self.table.sortByColumn(4, Qt.DescendingOrder)
+
+    def _fit_table_to_content(self):
+        """
+        Resize the table widget to exactly fit its current content (rows/cols)
+        so the rounded overlay hugs the corners (reduces empty space on right/bottom).
+        """
+        tv = self.table
+        model = tv.model()
+        if not model:
+            return
+
+        # Heights: header + sum of row heights (+ frame/grid breathing)
+        hh = tv.horizontalHeader().height()
+        rows_h = sum(tv.rowHeight(r) for r in range(model.rowCount()))
+
+        # Widths: vertical header + sum of column widths (+ scrollbar if visible)
+        vh_w = tv.verticalHeader().width()
+        cols_w = sum(tv.columnWidth(c) for c in range(model.columnCount()))
+        fw2 = tv.frameWidth() * 2
+        grid = 4    # small fudge factor so the overlay line doesn't clip
+        vscroll_w = tv.verticalScrollBar().width() if tv.verticalScrollBar().isVisible() else 0
+
+        # Fix size to content bounds (minimum height guard avoids collapsing when empty)
+        tv.setFixedHeight(max(hh + rows_h + fw2 + grid, 140))
+        tv.setFixedWidth(vh_w + cols_w + fw2 + vscroll_w + grid)
