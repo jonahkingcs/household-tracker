@@ -131,3 +131,59 @@ def complete_chore(
     session.commit()
     session.refresh(comp)
     return comp
+
+def list_completions(
+    session: Session,
+    *,
+    chore_id: str | None = None,
+    user_id: str | None = None,
+    date_from: datetime | None = None,
+    date_to: datetime | None = None,
+    order_desc: bool = True,
+) -> list[ChoreCompletion]:
+    """
+    Return chore completion records with optional filters.
+
+    Mirrors `items.list_purchases(...)` so the History tab can query chores
+    using the same filtering semantics:
+
+    Filters:
+      - chore_id: only completions for that chore
+      - user_id:  only rows done by that user
+      - date_from/date_to: inclusive lower bound (>=) / exclusive upper bound (<)
+
+    Ordering:
+      - By ChoreCompletion.date_completed (descending by default).
+      - Pass order_desc=False to sort ascending.
+
+    Eager loading:
+      - joinedload(ChoreCompletion.chore) so the model can show the chore name
+      - joinedload(ChoreCompletion.user)  so the model can show the user name
+    """
+    # Base select with eager-loaded relationships to avoid N+1 queries in the view.
+    stmt = (
+        select(ChoreCompletion)
+        .options(
+            joinedload(ChoreCompletion.chore),
+            joinedload(ChoreCompletion.user),
+        )
+    )
+
+    # Optional filters (apply only when provided)
+    if chore_id:
+        stmt = stmt.where(ChoreCompletion.chore_id == chore_id)
+    if user_id:
+        stmt = stmt.where(ChoreCompletion.user_id == user_id)
+    if date_from:
+        stmt = stmt.where(ChoreCompletion.date_completed >= date_from)
+    if date_to:
+        stmt = stmt.where(ChoreCompletion.date_completed < date_to)
+
+    # Ordering
+    if order_desc:
+        stmt = stmt.order_by(ChoreCompletion.date_completed.desc())
+    else:
+        stmt = stmt.order_by(ChoreCompletion.date_completed.asc())
+
+    # Materialize into a list so the view can safely iterate after the session closes.
+    return list(session.scalars(stmt))
